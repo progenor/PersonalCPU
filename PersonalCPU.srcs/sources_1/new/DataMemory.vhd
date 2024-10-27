@@ -45,7 +45,7 @@ entity DataMemory is
 end DataMemory;
 
 architecture Behavioral of DataMemory is
-    type Regis is array (0 to 63) of  std_logic_vector(63 downto 0);
+    type Regis is array (0 to 63) of  std_logic_vector(15 downto 0);
     signal DMemAddr : integer range 0 to 63 := 0;
 begin
     DMemAddr <= conv_integer(DMemAdd_Dir) 

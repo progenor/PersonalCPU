@@ -62,7 +62,9 @@ component DataMemory is
            signal MRd :  STD_LOGIC := '0';
            signal MWr :  STD_LOGIC := '0';
            signal DataMemOut : STD_LOGIC_VECTOR (15 downto 0) := (others => '0');
-
+           
+           -- signal for indirect testing
+           signal testY : std_logic_vector (5 downto 0) := "101010";
 begin   
    
    uut:DataMemory PORT MAP ( 
@@ -92,15 +94,35 @@ begin
       -- hold reset state for 100 ns.
       wait for 100 ns;
       
-      
+      -- testing with direct
       DataOutX <= x"ffff";
-      DMemAdd_dir <= x"11";
+      DMemAdd_dir <= "111000";
       wait for clk_period;
       SelAddr <= '0';
       Mwr <='1';
+      --setting it of
       wait for clk_period;
       Mwr <= '0';
+      --read from it
+      MRd <= '1';
+      wait for clk_period;
+      MRd <= '0';
+      wait for clk_period;
       
+      
+      --testing with indrirect
+      DataOutX <= x"f0f0";
+      DataOutY <= testY;
+      wait for clk_period;
+      SelAddr <= '1';
+      Mwr <= '1';
+      wait for clk_period;
+      Mwr <= '0';
+      -- read from it
+      MRd <= '1';
+      wait for clk_period;
+      MRd <= '0';
+      wait for clk_period;
       
       
       

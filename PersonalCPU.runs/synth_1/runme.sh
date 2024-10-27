@@ -41,4 +41,4 @@ EAStep()
      fi
 }
 
-EAStep vivado -log Mux.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source Mux.tcl
+EAStep vivado -log DataMemory.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source DataMemory.tcl
