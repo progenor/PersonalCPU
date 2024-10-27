@@ -93,6 +93,17 @@ begin
       wait for 100 ns;
       
       
+      DataOutX <= x"ffff";
+      DMemAdd_dir <= x"11";
+      wait for clk_period;
+      SelAddr <= '0';
+      Mwr <='1';
+      wait for clk_period;
+      Mwr <= '0';
+      
+      
+      
+      
    end process;
 
 
