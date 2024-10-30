@@ -66,8 +66,7 @@ begin
         if(falling_edge(clk)) then
             case Instr_code is --sorra veszi az osszes utasitast
                 when "000011" => --(AND Sx,kk)
-                --FIXME: WHAT THE HECK???
-                    Result:= Result(15 downto 8) & (KK_const and OP1(7 downto 0)); --TODO: CHECK THIS IF ITS OK
+                    Result(15 downto 0):= Result(15 downto 8) & (KK_const and OP1(7 downto 0)); 
                     if(Result(15 downto 0)=x"00")then -- eredmeny=0 eseten zeroflag lenullazasa
                         ZeroFlag:='1';
                     else
