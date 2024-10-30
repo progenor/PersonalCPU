@@ -188,7 +188,7 @@ begin
                     case KK_const(3 downto 0) is
                         -------------- SRR ----------------------
                         when "1110" => -- SR0
-                            CarryFlag := OP1(0);
+                            CarryFlag := OP1(0); --FIXME: TODO: CHECK IF THIS WORKS OR NOOOOOOT?
                             Result(14 downto 0) :=OP1(15 downto 1);
                             Result(15) :='0';
                             if(Result(15 downto 0)=x"00")then 
