@@ -183,6 +183,71 @@ begin
                         CarryFlag:='1';
                     end if; 
                 
+                -- forgotten functions added later
+
+                when "010001" => -- Add sX, KK
+                    Result := ('0' & OP1) + ('0' & "00000000" & KK_Const);
+                    CarryFlag := Result(16);
+                   
+                   if Result(15 downto 0) = x"0000" then
+                        ZeroFlag := '1';
+                   else ZeroFlag := '0';
+                   end if;
+                   
+                when "010000" => -- Add sX, sY
+                    Result := ('0' & OP1) + ('0' & "00000000" & OP2);
+                    CarryFlag := Result(16);
+                   
+                   if Result(15 downto 0) = x"0000" then
+                        ZeroFlag := '1';
+                   else ZeroFlag := '0';
+                   end if;
+                   
+                when "010011" => -- AddCy sX, KK
+                    Result := ('0' & OP1) + ('0' & "00000000" & KK_Const) + CarryFlag;
+                    CarryFlag := Result(16);
+                   
+                   if Result(15 downto 0) = x"0000" then
+                        ZeroFlag := '1';
+                   else ZeroFlag := '0';
+                   end if;
+                   
+                when "010010" => -- AddCy sX, sY
+                    Result := ('0' & OP1) + ('0' & "00000000" & OP2) + CarryFlag;
+                    CarryFlag := Result(16);
+                   
+                   if Result(15 downto 0) = x"0000" then
+                        ZeroFlag := '1';
+                   else ZeroFlag := '0';
+                   end if;
+
+                when "011001" => -- SUB sX, KK
+                    Result:= OP1-KK_const;
+                    if(Result(15 downto 0)=x"0000")then -- eredmeny=0 eseten zeroflag lenullazasa
+                        ZeroFlag:='1';
+                    else
+                        ZeroFlag:='0';
+                    end if;
+                    if(OP1>(KK_const+CarryFlag)) then --Carry flag allitasa negativ tulcsordulas eseten
+                        CarryFlag:='0';
+                    else
+                        CarryFlag:='1';
+                    end if;
+                    
+                    when "011000" => -- SUB sX, sY
+                    Result:= OP1-OP2-CarryFlag;
+                    if(Result(15 downto 0)=x"0000")then -- eredmeny=0 eseten zeroflag lenullazasa
+                        ZeroFlag:='1';
+                    else
+                        ZeroFlag:='0';
+                    end if;
+                    if(OP1>(KK_const+CarryFlag)) then --Carry flag allitasa negativ tulcsordulas eseten
+                        CarryFlag:='0';
+                    else
+                        CarryFlag:='1';
+                    end if;
+
+                -- Start of the shift registers
                 when "010100" => --(SRR Sx)
                     case KK_const(3 downto 0) is
                         -------------- SRR ----------------------
