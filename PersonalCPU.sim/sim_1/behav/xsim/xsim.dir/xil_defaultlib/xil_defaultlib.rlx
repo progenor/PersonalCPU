@@ -3,6 +3,8 @@
 Oct 13 2023
 20:47:58
 C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sim_1/imports/Downloads/TestRegisterBlock.vhd,1729088399,vhdl,,,,testregisterblock,,,,,,,,
+C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sim_1/new/ALUSim.vhd,1730897059,vhdl,,,,alusim,,,,,,,,
 C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sim_1/new/DataMemorySim.vhd,1730046143,vhdl,,,,datamemorysim,,,,,,,,
+C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/ALU.vhd,1730896762,vhdl,C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sim_1/new/ALUSim.vhd,,,alu,,,,,,,,
 C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/DataMemory.vhd,1730045399,vhdl,,,,datamemory,,,,,,,,
 C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/RegisterBlock.vhd,1728487434,vhdl,,,,registerblock,,,,,,,,
