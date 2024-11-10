@@ -84,11 +84,31 @@ begin
         PortIntoCPU <= (others => '0');
     else
         if(falling_edge(clk))then
-            if(IOWR='1' and IORD='0')then
-            -- do a case for counter stages
-            else
-            -- do a case for counter stages
-            end if;
+            if IORD = '1' and IOWR = '0' then
+                    case counter is
+                        when 0 =>
+                            null;
+                        when 1 =>
+                            Rd_strobe <= '1';
+                        when 2 =>
+                            PortIntoCPU <= PortDataIn;
+                        end case;
+                elsif IORD = '0' then
+                        Rd_strobe <= '0';
+                end if;
+                
+                if IORD = '0' and IOWR = '1' then
+                    case counter is        
+                        when 0 =>
+                            null;
+                        when 1 =>
+                            PortDataOut <= DataOutX;
+                        when 2 =>
+                            Wr_strobe <= '1';
+                        end case;
+                elsif IOWR = '0' then
+                        Wr_strobe <= '0';
+                end if;
         end if;
     end if;
 end process;
