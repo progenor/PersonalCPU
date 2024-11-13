@@ -61,7 +61,6 @@ if(falling_edge(Clk))then
     else
         if(MWr = '1' and MRd = '0') then
             Tarolo(DMemAddr) := DataOutX;
-        
         elsif (MWr = '0' and MRd = '1')then
             DataMemOut <= Tarolo(DMemAddr);
         end if;    

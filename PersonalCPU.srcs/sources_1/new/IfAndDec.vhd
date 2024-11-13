@@ -66,7 +66,7 @@ process(reset, Instr_Phase, Instruction)
     else
         if Instr_Phase = "000" then
              case Instruction(17 downto 12) is
-             --Adatmozgat� utas�t�sok
+             
                 when "000001" => --Load
                         Sx_Addr <= Instruction(11 downto 8);
                         KK_const <= Instruction(7 downto 0);
@@ -80,7 +80,7 @@ process(reset, Instr_Phase, Instruction)
                         Sx_Addr <= Instruction(11 downto 8);
                         DMemAddr_dir <= Instruction(5 downto 0); 
               
-              --Aritmetikai �s Logikai utas�t�sok
+              
                 when "000011" | "000101" | "000111" | "001101" | "011101" | "010001" | "010011" | "011001" | "011011" => -- And vagy Or vagy Xor vagy Mult8 vagy Comp vagy Add vagy AddCy vagy Sub vagy SubCy
                         Sx_Addr <= Instruction(11 downto 8);
                         KK_const <= Instruction(7 downto 0);
@@ -88,7 +88,7 @@ process(reset, Instr_Phase, Instruction)
                         Sx_Addr <= Instruction(11 downto 8);
                         Sy_Addr <= Instruction(7 downto 4);
                
-               --El�gaz�sk�pz? utas�t�sok
+              
                when "100010" =>
                         Branch_Addr <= Instruction(11 downto 0);
 
