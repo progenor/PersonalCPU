@@ -1,18 +1,16 @@
-
-*** Running vivado
-    with args -log IfAndDec.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source IfAndDec.tcl
-
-
-ECHO is off.
-ECHO is off.
-
-****** Vivado v2023.2 (64-bit)
-  **** SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
-  **** IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
-  **** SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Wed Nov 13 11:43:16 2024
+# Process ID: 19860
+# Current directory: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/synth_1
+# Command line: vivado.exe -log IfAndDec.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source IfAndDec.tcl
+# Log file: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/synth_1/IfAndDec.vds
+# Journal file: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/synth_1\vivado.jou
+# Running On: progenorLaptop, OS: Windows, CPU Frequency: 3194 MHz, CPU Physical cores: 16, Host memory: 16541 MB
+#-----------------------------------------------------------
 INFO: [Common 17-1460] Use of init.tcl in C:/Users/progenor/AppData/Roaming/Xilinx/Vivado/init.tcl is deprecated. Please use Vivado_init.tcl 
 Sourcing tcl script 'C:/Users/progenor/AppData/Roaming/Xilinx/Vivado/init.tcl'
 source IfAndDec.tcl -notrace
@@ -224,7 +222,6 @@ INFO: [Project 1-111] Unisim Transformation Summary:
   A total of 43 instances were transformed.
   LDC => LDCE: 43 instances
 
-The system cannot find the path specified.
 Synth Design complete | Checksum: bad5b19
 INFO: [Common 17-83] Releasing license: Synthesis
 17 Infos, 13 Warnings, 1 Critical Warnings and 0 Errors encountered.

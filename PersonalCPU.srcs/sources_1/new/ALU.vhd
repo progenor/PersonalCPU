@@ -24,7 +24,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.std_logic_unsigned.ALL;
 use IEEE.std_logic_arith.ALL;
-use ieee.numeric_std.all;
+--use ieee.numeric_std.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -115,7 +115,7 @@ begin
                     end if;
                     
                 when "001101" => --(Mult8 Sx, kk)
-                    Result(15 downto 0):= KK_const * OP1(7 downto 0);
+                    Result(15 downto 0):= unsigned(KK_const) * unsigned(OP1(7 downto 0));
                     if(Result(15 downto 0)=x"00")then -- eredmeny=0 eseten zeroflag lenullazasa
                             ZeroFlag:='1';
                         else
@@ -125,7 +125,7 @@ begin
 
                         
                 when "001100" => --(Mult8 Sx, Sy)
-                    Result(15 downto 0):= OP2(15 downto 0) * OP1(15 downto 0);
+                    Result(15 downto 0):= unsigned(OP2(7 downto 0)) * unsigned(OP1(7 downto 0));
                     if(Result(15 downto 0)=x"00")then -- eredmeny=0 eseten zeroflag lenullazasa
                             ZeroFlag:='1';
                         else
@@ -162,7 +162,7 @@ begin
                 -- forgotten functions added later
 
                 when "010001" => -- Add sX, KK
-                    Result(15 downto 0) := ('0' & OP1) + ('0' & "00000000" & KK_Const);
+                    Result(15 downto 0) := ('0' & OP1(7 downto 0)) + ( "00000000" & KK_Const);
                     CarryFlag := Result(16);
                    
                    if Result(15 downto 0) = x"0000" then
@@ -171,7 +171,7 @@ begin
                    end if;
                    
                 when "010000" => -- Add sX, sY
-                    Result(15 downto 0) := ('0' & OP1) + ('0' & "00000000" & OP2);
+                    Result(15 downto 0) := ('0' & OP1(7 downto 0)) + ("00000000" & OP2(7 downto 0));
                     CarryFlag := Result(16);
                    
                    if Result(15 downto 0) = x"0000" then
@@ -180,7 +180,7 @@ begin
                    end if;
                    
                 when "010011" => -- AddCy sX, KK
-                    Result(15 downto 0) := ('0' & OP1) + ('0' & "00000000" & KK_Const) + CarryFlag;
+                    Result(15 downto 0) := ('0' & OP1(7 downto 0)) + ( "00000000" & KK_Const) + CarryFlag;
                     CarryFlag := Result(16);
                    
                    if Result(15 downto 0) = x"0000" then
@@ -189,7 +189,7 @@ begin
                    end if;
                    
                 when "010010" => -- AddCy sX, sY
-                    Result(15 downto 0) := ('0' & OP1) + ('0' & "00000000" & OP2) + CarryFlag;
+                    Result(15 downto 0) := ('0' & OP1(7 downto 0)) + ("00000000" & OP2(7 downto 0)) + CarryFlag;
                     CarryFlag := Result(16);
                    
                    if Result(15 downto 0) = x"0000" then
@@ -198,7 +198,7 @@ begin
                    end if;
 
                 when "011001" => -- SUB sX, KK
-                    Result(15 downto 0):= OP1-KK_const;
+                    Result(15 downto 0):= Result(15 downto 8) & (OP1(7 downto 0)-KK_const);
                     if(Result(15 downto 0)=x"0000")then -- eredmeny=0 eseten zeroflag lenullazasa
                         ZeroFlag:='1';
                     else
@@ -211,7 +211,7 @@ begin
                     end if;
                     
                     when "011000" => -- SUB sX, sY
-                    Result(15 downto 0):= OP1-OP2-CarryFlag;
+                    Result(15 downto 0):= Result(15 downto 8) & (OP1(7 downto 0)-OP2(7 downto 0)-CarryFlag);
                     if(Result(15 downto 0)=x"0000")then -- eredmeny=0 eseten zeroflag lenullazasa
                         ZeroFlag:='1';
                     else
@@ -260,7 +260,7 @@ begin
                                 ZeroFlag:='0';
                             end if;
                             
-                         when "1000" => -- RR
+                         when "1100" => -- RR
                             CarryFlag := OP1(0);
                             Result(14 downto 0) := OP1(15 downto 1);
                             Result(15) := OP1(0);
@@ -285,7 +285,7 @@ begin
                             Result(15 downto 1) :=OP1(14 downto 0);
                             Result(0) :='1';
                             
-                        when "1010" => -- SLx
+                        when "0100" => -- SLx
                             CarryFlag := OP1(15);
                             Result(15 downto 1) := OP1(14 downto 0);
                             Result(0) := OP1(0);
@@ -295,7 +295,7 @@ begin
                                 ZeroFlag:='0';
                             end if;
                             
-                         when "1000" => -- SLA
+                         when "0000" => -- SLA
                             CarryFlag := OP1(15);
                             Result(15 downto 1) := OP1(14 downto 0);
                             Result(0) := CarryFlag;
@@ -305,7 +305,7 @@ begin
                                 ZeroFlag:='0';
                             end if;
                             
-                         when "1000" => -- RL
+                         when "0010" => -- RL
                             CarryFlag := OP1(15);
                             Result(15 downto 1) := OP1(14 downto 0);
                             Result(0) := OP1(15);
@@ -314,9 +314,11 @@ begin
                             else
                                 ZeroFlag:='0';
                             end if;
+                         when others =>
+                            null;
                     end case; 
                     when others =>
-                        Result := (others =>'0');  
+                        null;
             end case;
             ALU_Result<=Result(15 downto 0);
             Carry<=CarryFlag;
