@@ -1,18 +1,16 @@
-
-*** Running vivado
-    with args -log ALU.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source ALU.tcl
-
-
-ECHO is off.
-ECHO is off.
-
-****** Vivado v2023.2 (64-bit)
-  **** SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
-  **** IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
-  **** SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
-    ** Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
-
+#-----------------------------------------------------------
+# Vivado v2023.2 (64-bit)
+# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
+# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
+# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
+# Start of session at: Wed Nov 13 11:07:16 2024
+# Process ID: 10548
+# Current directory: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/synth_1
+# Command line: vivado.exe -log ALU.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source ALU.tcl
+# Log file: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/synth_1/ALU.vds
+# Journal file: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/synth_1\vivado.jou
+# Running On: progenorLaptop, OS: Windows, CPU Frequency: 3194 MHz, CPU Physical cores: 16, Host memory: 16541 MB
+#-----------------------------------------------------------
 INFO: [Common 17-1460] Use of init.tcl in C:/Users/progenor/AppData/Roaming/Xilinx/Vivado/init.tcl is deprecated. Please use Vivado_init.tcl 
 Sourcing tcl script 'C:/Users/progenor/AppData/Roaming/Xilinx/Vivado/init.tcl'
 source ALU.tcl -notrace
