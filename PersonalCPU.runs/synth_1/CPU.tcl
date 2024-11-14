@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/synth_1/IfAndDec.tcl"
+  variable script "C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/synth_1/CPU.tcl"
   variable category "vivado_synth"
 }
 
@@ -85,7 +85,16 @@ set_property ip_output_repo c:/Users/progenor/VivadoProjects/PersonalCPU/Persona
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-read_vhdl -library xil_defaultlib C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/IfAndDec.vhd
+read_vhdl -library xil_defaultlib {
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/ALU.vhd
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/DataMemory.vhd
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/IfAndDec.vhd
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/Mux.vhd
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/PFC.vhd
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/PortLogic.vhd
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/RegisterBlock.vhd
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/CPU.vhd
+}
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
@@ -101,7 +110,7 @@ read_checkpoint -auto_incremental -incremental C:/Users/progenor/VivadoProjects/
 close [open __synthesis_is_running__ w]
 
 OPTRACE "synth_design" START { }
-synth_design -top IfAndDec -part xc7z020clg400-1
+synth_design -top CPU -part xc7z020clg400-1
 OPTRACE "synth_design" END { }
 if { [get_msg_config -count -severity {CRITICAL WARNING}] > 0 } {
  send_msg_id runtcl-6 info "Synthesis results are not added to the cache due to CRITICAL_WARNING"
@@ -111,10 +120,10 @@ if { [get_msg_config -count -severity {CRITICAL WARNING}] > 0 } {
 OPTRACE "write_checkpoint" START { CHECKPOINT }
 # disable binary constraint mode for synth run checkpoints
 set_param constraints.enableBinaryConstraints false
-write_checkpoint -force -noxdef IfAndDec.dcp
+write_checkpoint -force -noxdef CPU.dcp
 OPTRACE "write_checkpoint" END { }
 OPTRACE "synth reports" START { REPORT }
-create_report "synth_1_synth_report_utilization_0" "report_utilization -file IfAndDec_utilization_synth.rpt -pb IfAndDec_utilization_synth.pb"
+create_report "synth_1_synth_report_utilization_0" "report_utilization -file CPU_utilization_synth.rpt -pb CPU_utilization_synth.pb"
 OPTRACE "synth reports" END { }
 file delete __synthesis_is_running__
 close [open __synthesis_is_complete__ w]

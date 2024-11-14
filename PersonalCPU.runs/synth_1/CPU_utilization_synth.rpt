@@ -1,10 +1,10 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-| Date         : Wed Nov 13 11:44:12 2024
+| Date         : Wed Nov 13 18:08:38 2024
 | Host         : progenorLaptop running 64-bit major release  (build 9200)
-| Command      : report_utilization -file IfAndDec_utilization_synth.rpt -pb IfAndDec_utilization_synth.pb
-| Design       : IfAndDec
+| Command      : report_utilization -file CPU_utilization_synth.rpt -pb CPU_utilization_synth.pb
+| Design       : CPU
 | Device       : xc7z020clg400-1
 | Speed File   : -1
 | Design State : Synthesized
@@ -31,12 +31,12 @@ Table of Contents
 +-------------------------+------+-------+------------+-----------+-------+
 |        Site Type        | Used | Fixed | Prohibited | Available | Util% |
 +-------------------------+------+-------+------------+-----------+-------+
-| Slice LUTs*             |   42 |     0 |          0 |     53200 |  0.08 |
-|   LUT as Logic          |   42 |     0 |          0 |     53200 |  0.08 |
+| Slice LUTs*             |    8 |     0 |          0 |     53200 |  0.02 |
+|   LUT as Logic          |    8 |     0 |          0 |     53200 |  0.02 |
 |   LUT as Memory         |    0 |     0 |          0 |     17400 |  0.00 |
-| Slice Registers         |   43 |     0 |          0 |    106400 |  0.04 |
-|   Register as Flip Flop |    0 |     0 |          0 |    106400 |  0.00 |
-|   Register as Latch     |   43 |     0 |          0 |    106400 |  0.04 |
+| Slice Registers         |   11 |     0 |          0 |    106400 |  0.01 |
+|   Register as Flip Flop |    3 |     0 |          0 |    106400 | <0.01 |
+|   Register as Latch     |    8 |     0 |          0 |    106400 | <0.01 |
 | F7 Muxes                |    0 |     0 |          0 |     26600 |  0.00 |
 | F8 Muxes                |    0 |     0 |          0 |     13300 |  0.00 |
 +-------------------------+------+-------+------------+-----------+-------+
@@ -57,7 +57,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 | 0     |            _ |       Reset |            - |
 | 0     |          Yes |           - |            - |
 | 0     |          Yes |           - |          Set |
-| 43    |          Yes |           - |        Reset |
+| 11    |          Yes |           - |        Reset |
 | 0     |          Yes |         Set |            - |
 | 0     |          Yes |       Reset |            - |
 +-------+--------------+-------------+--------------+
@@ -92,7 +92,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 +-----------------------------+------+-------+------------+-----------+-------+
 |          Site Type          | Used | Fixed | Prohibited | Available | Util% |
 +-----------------------------+------+-------+------------+-----------+-------+
-| Bonded IOB                  |   75 |     0 |          0 |       125 | 60.00 |
+| Bonded IOB                  |   55 |     0 |          0 |       125 | 44.00 |
 | Bonded IPADs                |    0 |     0 |          0 |         2 |  0.00 |
 | Bonded IOPADs               |    0 |     0 |          0 |       130 |  0.00 |
 | PHY_CONTROL                 |    0 |     0 |          0 |         4 |  0.00 |
@@ -115,7 +115,7 @@ Warning! LUT value is adjusted to account for LUT combining.
 +------------+------+-------+------------+-----------+-------+
 |  Site Type | Used | Fixed | Prohibited | Available | Util% |
 +------------+------+-------+------------+-----------+-------+
-| BUFGCTRL   |    0 |     0 |          0 |        32 |  0.00 |
+| BUFGCTRL   |    1 |     0 |          0 |        32 |  3.13 |
 | BUFIO      |    0 |     0 |          0 |        16 |  0.00 |
 | MMCME2_ADV |    0 |     0 |          0 |         4 |  0.00 |
 | PLLE2_ADV  |    0 |     0 |          0 |         4 |  0.00 |
@@ -148,13 +148,16 @@ Warning! LUT value is adjusted to account for LUT combining.
 +----------+------+---------------------+
 | Ref Name | Used | Functional Category |
 +----------+------+---------------------+
-| OBUF     |   53 |                  IO |
-| LDCE     |   43 |        Flop & Latch |
-| LUT2     |   26 |                 LUT |
-| LUT6     |   25 |                 LUT |
-| IBUF     |   22 |                  IO |
-| LUT4     |    5 |                 LUT |
-| LUT3     |    1 |                 LUT |
+| OBUF     |   24 |                  IO |
+| IBUF     |   16 |                  IO |
+| OBUFT    |   15 |                  IO |
+| LUT2     |    8 |                 LUT |
+| LDCE     |    8 |        Flop & Latch |
+| LUT3     |    3 |                 LUT |
+| FDCE     |    3 |        Flop & Latch |
+| LUT6     |    2 |                 LUT |
+| LUT4     |    1 |                 LUT |
+| BUFG     |    1 |               Clock |
 +----------+------+---------------------+
 
 

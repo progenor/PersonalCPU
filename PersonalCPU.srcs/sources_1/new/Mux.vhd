@@ -36,7 +36,7 @@ entity Mux is
            DataMemOut : in STD_LOGIC_VECTOR (15 downto 0);
            PortIntoCPU : in STD_LOGIC_VECTOR (15 downto 0);
            ALUresult : in STD_LOGIC_VECTOR (15 downto 0);
-           KK_const : in STD_LOGIC_VECTOR (15 downto 0);
+           KK_const : in STD_LOGIC_VECTOR (7 downto 0);
            DataOut_Y : in STD_LOGIC_VECTOR (15 downto 0);
            DataOutMUX : out STD_LOGIC_VECTOR (15 downto 0));
 end Mux;
@@ -55,7 +55,7 @@ process(MUX_Sel, DataMemOut, PortIntoCPU, ALUresult, KK_const, DataOut_Y) is
             when "010" =>
                 DataOutMUX <= ALUresult;
             when "011" =>
-                DataOutMUX <= KK_const;
+                DataOutMUX <=  "00000000" & KK_const;
             when "100" =>
                 DataOutMUX <= DataOut_Y;   
             when others =>
