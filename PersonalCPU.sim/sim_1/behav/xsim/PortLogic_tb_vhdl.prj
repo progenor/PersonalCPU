@@ -1,7 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  \
-"../../../../PersonalCPU.srcs/sources_1/new/PortLogic.vhd" \
-"../../../../PersonalCPU.srcs/sim_1/new/PortLogic_tb.vhd" \
-
-# Do not sort compile order
-nosort

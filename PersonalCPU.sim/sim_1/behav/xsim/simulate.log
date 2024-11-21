@@ -1,8 +1,1 @@
 Time resolution is 1 ps
-Error: Read operation failed
-Time: 50 ns  Iteration: 0  Process: /PortLogic_tb/test_process  File: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sim_1/new/PortLogic_tb.vhd
-Error: Write operation failed
-Time: 60 ns  Iteration: 0  Process: /PortLogic_tb/test_process  File: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sim_1/new/PortLogic_tb.vhd
-Failure: End of simulation
-Time: 110 ns  Iteration: 0  Process: /PortLogic_tb/test_process  File: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sim_1/new/PortLogic_tb.vhd
-$finish called at time : 110 ns : File "C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sim_1/new/PortLogic_tb.vhd" Line 91
