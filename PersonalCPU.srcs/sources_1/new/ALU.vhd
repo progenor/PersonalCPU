@@ -63,6 +63,8 @@ begin
         Zero<='0';
         ALU_Result<=(others=>'0');
     else 
+        if Execute = '1'
+        then
         if(falling_edge(clk)) then
             case Instr_code is --sorra veszi az osszes utasitast
                 when "000011" => --(AND Sx,kk)
@@ -320,6 +322,7 @@ begin
                     when others =>
                         null;
             end case;
+            end if;
             ALU_Result<=Result(15 downto 0);
             Carry<=CarryFlag;
             Zero<=ZeroFlag;

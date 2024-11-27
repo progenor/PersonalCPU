@@ -65,6 +65,7 @@ process(reset, Instr_Phase, Instruction)
         
     else
         if Instr_Phase = "000" then
+        Instr_code <= Instruction(17 downto 12);
              case Instruction(17 downto 12) is
              
                 when "000001" => --Load
@@ -87,18 +88,10 @@ process(reset, Instr_Phase, Instruction)
                 when "000010" | "000100" | "000110" | "001100" | "011100" | "010000" | "010010" | "011000" | "011010" =>
                         Sx_Addr <= Instruction(11 downto 8);
                         Sy_Addr <= Instruction(7 downto 4);
-               
               
                when "100010" =>
                         Branch_Addr <= Instruction(11 downto 0);
 
-                 
-                AL_Instr_ext <= Instruction(3 downto 0);
-                DMemAddr_dir <= Instruction(5 downto 0); 
-                PortID_dir <= Instruction(7 downto 0);
-                ENInterrupt <= Instruction(0);
-                Branch_Addr <= Instruction(11 downto 0);
-                Instr_code <= Instruction(17 downto 12);
                 when others =>
                     Sx_Addr <= (others => '0');
                     Sy_Addr <= (others => '0');
@@ -110,6 +103,12 @@ process(reset, Instr_Phase, Instruction)
                     KK_Const <= (others => '0');
                     Instr_code <= (others => '0');
               end case;
+--                AL_Instr_ext <= Instruction(3 downto 0);
+--                DMemAddr_dir <= Instruction(5 downto 0); 
+--                PortID_dir <= Instruction(7 downto 0);
+--                ENInterrupt <= Instruction(0);
+--                Branch_Addr <= Instruction(11 downto 0);
+--                Instr_code <= Instruction(17 downto 12);
             end if;
          end if;
 end process;

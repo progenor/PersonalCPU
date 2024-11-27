@@ -21,9 +21,9 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.numeric_std.ALL;
---use IEEE.std_logic_unsigned.ALL;
---use IEEE.std_logic_arith.ALL;
+--use IEEE.numeric_std.ALL;
+use IEEE.std_logic_unsigned.ALL;
+use IEEE.std_logic_arith.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -57,10 +57,10 @@ begin
                 Data_Out_x <= (others => '0');
             else
                 if(RW = '1') then
-                    Tarolo(TO_INTEGER(unsigned(SxAddr))) := Data_IN;
+                    Tarolo(conv_integer(SxAddr)) := Data_IN;
                 else
-                    Data_Out_x <= Tarolo(TO_INTEGER(unsigned(SxAddr)));
-                    Data_Out_y <= Tarolo(TO_INTEGER(unsigned(SyAddr)));
+                    Data_Out_x <= Tarolo(conv_integer(SxAddr));
+                    Data_Out_y <= Tarolo(conv_integer(SyAddr));
                     
                 end if;
             end if;

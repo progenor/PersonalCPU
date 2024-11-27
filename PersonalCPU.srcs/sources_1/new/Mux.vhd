@@ -44,7 +44,7 @@ end Mux;
 architecture Behavioral of Mux is
 
 begin
-process(MUX_Sel, DataMemOut, PortIntoCPU, ALUresult, KK_const, DataOut_Y) is
+process(MUX_Sel) is
     begin
   
         case MUX_Sel is
@@ -59,7 +59,7 @@ process(MUX_Sel, DataMemOut, PortIntoCPU, ALUresult, KK_const, DataOut_Y) is
             when "100" =>
                 DataOutMUX <= DataOut_Y;   
             when others =>
-                DataOutMUX <= (others => 'Z');
+                DataOutMUX <= (others => '0');
         end case;
   
     end process;

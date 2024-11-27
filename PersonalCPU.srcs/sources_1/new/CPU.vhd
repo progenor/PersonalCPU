@@ -164,6 +164,8 @@ end component;
     signal PortID_sel       : STD_LOGIC;
     signal IORD             : STD_LOGIC;
     signal IOWR             : STD_LOGIC;
+    signal MRd             : STD_LOGIC;
+    signal MWr             : STD_LOGIC;
     signal DataOutX         : STD_LOGIC_VECTOR(15 downto 0);
     signal Rd_strobe        : STD_LOGIC;
     signal Wr_strobe        : STD_LOGIC;
@@ -236,8 +238,8 @@ begin
             Sel_Addr => Sel_Addr,
             PortId_Sel => PortID_sel,
             RW => RW,
-            Mrd => IORD,
-            Mwr => IOWR,
+            Mrd => MRd,
+            Mwr => MWr,
             IOrd => IORD,
             IOwr => IOWR,
             Instr_addr => Instr_addr
@@ -281,8 +283,8 @@ begin
             DataOutY => DMemAddr_dir,
             DMemAdd_Dir => DMemAddr_dir,
             SelAddr => Sel_Addr,
-            MRd => IORD,
-            MWr => IOWR,
+            MRd => MRd,
+            MWr => MWr,
             DataMemOut => DataMemOut
         );
 
