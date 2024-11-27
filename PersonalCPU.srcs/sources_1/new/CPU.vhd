@@ -131,7 +131,7 @@ component DataMemory is
     Port ( Clk : in STD_LOGIC;
            reset : in STD_LOGIC;
            DataOutX : in STD_LOGIC_VECTOR (15 downto 0);
-           DataOutY : in STD_LOGIC_VECTOR (5 downto 0);
+           DataOutY : in STD_LOGIC_VECTOR (15 downto 0);
            DMemAdd_Dir : in STD_LOGIC_VECTOR (5 downto 0);
            SelAddr : in STD_LOGIC;
            MRd : in STD_LOGIC;
@@ -166,9 +166,6 @@ end component;
     signal IOWR             : STD_LOGIC;
     signal MRd             : STD_LOGIC;
     signal MWr             : STD_LOGIC;
-    signal DataOutX         : STD_LOGIC_VECTOR(15 downto 0);
-    signal Rd_strobe        : STD_LOGIC;
-    signal Wr_strobe        : STD_LOGIC;
     signal PortIntoCPU      : STD_LOGIC_VECTOR(15 downto 0);
     signal Instr_code       : STD_LOGIC_VECTOR(5 downto 0);
     signal Branch_addr      : STD_LOGIC_VECTOR(11 downto 0);
@@ -182,10 +179,10 @@ end component;
     signal Sel_Addr         : STD_LOGIC;
     signal KK_const         : STD_LOGIC_VECTOR(7 downto 0);
     signal DMemAddr_dir     : STD_LOGIC_VECTOR(5 downto 0);
-    signal Instr_addr       : STD_LOGIC_VECTOR(11 downto 0);
     signal DataMemOut       : STD_LOGIC_VECTOR(15 downto 0);
     signal AL_Instr_Ext     : STD_LOGIC_VECTOR(3 downto 0);
     signal ALU_Result       : STD_LOGIC_VECTOR(15 downto 0);
+    signal Data_in          : STD_LOGIC_VECTOR (15 downto 0);
 
 begin
     -- RegisterBlock instance
@@ -193,7 +190,7 @@ begin
         port map (
             Clk => clk,
             Reset => Reset,
-            Data_IN => PortDataIn,
+            Data_IN => Data_in,
             SxAddr => SxAddr,
             SyAddr => SyAddr,
             RW => RW,
@@ -212,11 +209,11 @@ begin
             PortID_sel => PortID_sel,
             IORD => IORD,
             IOWR => IOWR,
-            DataOutX => DataOutX,
+            DataOutX => Data_Out_x,
             PortID => PortID,
             PortDataOut => PortDataOut,
-            Rd_strobe => Rd_strobe,
-            Wr_strobe => Wr_strobe,
+            Rd_strobe => ReadStrobe,
+            Wr_strobe => WriteStrobe,
             PortIntoCPU => PortIntoCPU
         );
 
@@ -242,7 +239,7 @@ begin
             Mwr => MWr,
             IOrd => IORD,
             IOwr => IOWR,
-            Instr_addr => Instr_addr
+            Instr_addr => instruction_Address
         );
 
     -- Mux instance
@@ -254,7 +251,7 @@ begin
             ALUresult => ALU_Result,
             KK_const => KK_const,
             DataOut_Y => Data_Out_y,
-            DataOutMUX => PortDataOut
+            DataOutMUX => Data_in
         );
 
     -- IfAndDec instance
@@ -280,7 +277,7 @@ begin
             Clk => clk,
             reset => Reset,
             DataOutX => Data_Out_x,
-            DataOutY => DMemAddr_dir,
+            DataOutY => Data_Out_y,
             DMemAdd_Dir => DMemAddr_dir,
             SelAddr => Sel_Addr,
             MRd => MRd,

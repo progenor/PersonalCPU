@@ -36,7 +36,7 @@ entity DataMemory is
     Port ( Clk : in STD_LOGIC;
            reset : in STD_LOGIC;
            DataOutX : in STD_LOGIC_VECTOR (15 downto 0);
-           DataOutY : in STD_LOGIC_VECTOR (5 downto 0);
+           DataOutY : in STD_LOGIC_VECTOR (15 downto 0);
            DMemAdd_Dir : in STD_LOGIC_VECTOR (5 downto 0);
            SelAddr : in STD_LOGIC;
            MRd : in STD_LOGIC;
@@ -49,7 +49,7 @@ architecture Behavioral of DataMemory is
     signal DMemAddr : integer range 0 to 63 := 0;
 begin
     DMemAddr <= conv_integer(DMemAdd_Dir) 
-            when SelAddr = '0' else conv_integer(DataOutY);
+            when SelAddr = '0' else conv_integer(DataOutY(5 downto 0));
 
 process(Clk, reset, MWr, MRd)
     variable Tarolo : Regis := (others=>(others => '0'));
