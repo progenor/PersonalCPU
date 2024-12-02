@@ -1,0 +1,4 @@
+ciklus: 
+        INPUT s1, 05
+        OUTPUT s1, 06
+        JUMP ciklus

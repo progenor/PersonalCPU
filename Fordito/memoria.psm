@@ -1,0 +1,4 @@
+ciklus:
+input s1,05
+output s1,06
+jump ciklus
