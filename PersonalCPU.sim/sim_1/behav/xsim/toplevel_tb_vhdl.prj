@@ -1,0 +1,16 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../PersonalCPU.srcs/sources_1/new/ALU.vhd" \
+"../../../../PersonalCPU.srcs/sources_1/new/CPU.vhd" \
+"../../../../PersonalCPU.srcs/sources_1/new/DataMemory.vhd" \
+"../../../../PersonalCPU.srcs/sources_1/new/IfAndDec.vhd" \
+"../../../../PersonalCPU.srcs/sources_1/new/Mux.vhd" \
+"../../../../PersonalCPU.srcs/sources_1/imports/Downloads/PFC.vhd" \
+"../../../../PersonalCPU.srcs/sources_1/new/PortLogic.vhd" \
+"../../../../PersonalCPU.srcs/sources_1/new/RegisterBlock.vhd" \
+"../../../../../Digi2/MyCPU/Fordito/memoria.vhd" \
+"../../../../PersonalCPU.srcs/sources_1/new/toplevel.vhd" \
+"../../../../PersonalCPU.srcs/sim_1/new/toplevel_tb.vhd" \
+
+# Do not sort compile order
+nosort
