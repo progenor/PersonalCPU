@@ -12,14 +12,14 @@
    </db_ref_list>
    <zoom_setting>
       <ZoomStartTime time="0.000 ns"></ZoomStartTime>
-      <ZoomEndTime time="434.053 ns"></ZoomEndTime>
-      <Cursor1Time time="39.968 ns"></Cursor1Time>
+      <ZoomEndTime time="1,000.001 ns"></ZoomEndTime>
+      <Cursor1Time time="743.631 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="115"></NameColumnWidth>
-      <ValueColumnWidth column_width="170"></ValueColumnWidth>
+      <NameColumnWidth column_width="147"></NameColumnWidth>
+      <ValueColumnWidth column_width="133"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="45" />
+   <WVObjectSize size="41" />
    <wvobject fp_name="/toplevel_tb/btn" type="array">
       <obj_property name="ElementShortName">btn[3:0]</obj_property>
       <obj_property name="ObjectShortName">btn[3:0]</obj_property>
@@ -120,18 +120,6 @@
       <obj_property name="ElementShortName">IOWR</obj_property>
       <obj_property name="ObjectShortName">IOWR</obj_property>
    </wvobject>
-   <wvobject fp_name="/toplevel_tb/uut/processor/DataOutX" type="array">
-      <obj_property name="ElementShortName">DataOutX[15:0]</obj_property>
-      <obj_property name="ObjectShortName">DataOutX[15:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/toplevel_tb/uut/processor/Rd_strobe" type="logic">
-      <obj_property name="ElementShortName">Rd_strobe</obj_property>
-      <obj_property name="ObjectShortName">Rd_strobe</obj_property>
-   </wvobject>
-   <wvobject fp_name="/toplevel_tb/uut/processor/Wr_strobe" type="logic">
-      <obj_property name="ElementShortName">Wr_strobe</obj_property>
-      <obj_property name="ObjectShortName">Wr_strobe</obj_property>
-   </wvobject>
    <wvobject fp_name="/toplevel_tb/uut/processor/PortIntoCPU" type="array">
       <obj_property name="ElementShortName">PortIntoCPU[15:0]</obj_property>
       <obj_property name="ObjectShortName">PortIntoCPU[15:0]</obj_property>
@@ -183,10 +171,6 @@
    <wvobject fp_name="/toplevel_tb/uut/processor/DMemAddr_dir" type="array">
       <obj_property name="ElementShortName">DMemAddr_dir[5:0]</obj_property>
       <obj_property name="ObjectShortName">DMemAddr_dir[5:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/toplevel_tb/uut/processor/Instr_addr" type="array">
-      <obj_property name="ElementShortName">Instr_addr[11:0]</obj_property>
-      <obj_property name="ObjectShortName">Instr_addr[11:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/toplevel_tb/uut/processor/DataMemOut" type="array">
       <obj_property name="ElementShortName">DataMemOut[15:0]</obj_property>

@@ -34,6 +34,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity toplevel is
     Port ( clk : in STD_LOGIC;
            btn : in STD_LOGIC_VECTOR (3 downto 0);
+           sw1 : in STD_LOGIC;
            led : out STD_LOGIC_VECTOR (3 downto 0);
            reset : in STD_LOGIC);
 end toplevel;
@@ -91,7 +92,8 @@ process(clk,rdstr,portid)
 begin
 if clk'event and clk='1' then
 if rdstr='1' and portid=x"05" then
-    inport<="000000000000"&btn;
+--     inport<="000000000000"&btn;
+    inport<="00000000000"&sw1&btn;
 end if;
 end if;
 end process;
@@ -106,7 +108,7 @@ port map (
            PortID =>  portid,
       WriteStrobe =>  wrstr,
        ReadStrobe =>  rdstr,
-         interrupt =>  '0',
+         interrupt =>  btn(0),
      interrupt_Acknowledge =>  open,
              Reset =>  reset,
                clk =>  clk

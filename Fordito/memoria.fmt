@@ -1,4 +1,12 @@
-ciklus: 
-        INPUT s1, 05
-        OUTPUT s1, 06
-        JUMP ciklus
+             ENABLE INTERRUPT
+             LOAD s1, 00
+     ciklus: 
+             INPUT s2, 05
+             OR s2, s1
+             OUTPUT s2, 06
+             JUMP ciklus
+megszakitas: 
+             ADD s1, 01
+             RETURN 
+             ADDRESS 3FF
+             JUMP megszakitas

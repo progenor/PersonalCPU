@@ -1,4 +1,57 @@
-ciklus:
-input s1,05
-output s1,06
-jump ciklus
+NAMEREG s1, a
+NAMEREG s2, b
+NAMEREG s3, c
+NAMEREG s4, sw0
+NAMEREG s5, led
+NAMEREG s6, x
+NAMEREG s7, dm
+
+LOAD a, 00
+LOAD b, 01
+LOAD c, 00
+LAOD dm, 00
+
+STORE a, dm
+
+ADD dm, 01
+STORE b, dm
+
+
+CALL Fibo
+
+; main Loop
+loop:
+	COMPARE sw0, 00
+	JUMP Z, loop1
+	
+	COMPARE sw0, 01
+	JUMP Z, loop2
+
+	JUMP loop
+
+
+loop1:
+	OUTPUT led 
+
+
+
+Fibo:
+
+	ADD c, a
+	ADD c, b ; a=0 b=1, c=a+b
+
+	ADD dm, 01
+	COMPARE dm, 13
+	RETURN Z
+
+	STORE c, dm
+	
+	LOAD a, b
+	LOAD b, c
+
+	COMPARE a, 255
+	RETURN NC
+	CALL Fibo
+
+
+

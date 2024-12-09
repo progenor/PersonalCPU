@@ -13,4 +13,4 @@ set_property -dict { PACKAGE_PIN L20   IOSTANDARD LVCMOS33 } [get_ports { btn[2]
 set_property -dict { PACKAGE_PIN L19   IOSTANDARD LVCMOS33 } [get_ports { btn[3] }]; #IO_L9P_T1_DQS_AD3P_35 Sch=btn[3]
 
 set_property -dict { PACKAGE_PIN M20   IOSTANDARD LVCMOS33 } [get_ports { reset }]; #IO_L7N_T1_AD2N_35 Sch=sw[0]
-#set_property -dict { PACKAGE_PIN M19   IOSTANDARD LVCMOS33 } [get_ports { Interrupt }]; #IO_L7P_T1_AD2P_35 Sch=sw[1]
+set_property -dict { PACKAGE_PIN M19   IOSTANDARD LVCMOS33 } [get_ports { sw1 }]; #IO_L7P_T1_AD2P_35 Sch=sw[1]
