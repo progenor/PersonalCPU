@@ -174,7 +174,6 @@ end component;
     signal En_Intr          : STD_LOGIC;
     signal Instr_phase      : STD_LOGIC_VECTOR(2 downto 0);
     signal Execute          : STD_LOGIC;
-    signal Int_Ack          : STD_LOGIC;
     signal Mux_Sel          : STD_LOGIC_VECTOR(2 downto 0);
     signal Sel_Addr         : STD_LOGIC;
     signal KK_const         : STD_LOGIC_VECTOR(7 downto 0);
@@ -230,7 +229,7 @@ begin
             En_Intr => En_Intr,
             Instr_phase => Instr_phase,
             Execute => Execute,
-            Int_Ack => Int_Ack,
+            Int_Ack => interrupt_Acknowledge,
             Mux_Sel => Mux_Sel,
             Sel_Addr => Sel_Addr,
             PortId_Sel => PortID_sel,

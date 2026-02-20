@@ -71,7 +71,6 @@ proc create_report { reportName command } {
 }
 OPTRACE "synth_1" START { ROLLUP_AUTO }
 set_param chipscope.maxJobs 4
-set_param xicom.use_bs_reader 1
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7z020clg400-1
 
@@ -96,8 +95,8 @@ read_vhdl -library xil_defaultlib {
   C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/PFC.vhd
   C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/PortLogic.vhd
   C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/RegisterBlock.vhd
-  C:/Users/progenor/VivadoProjects/Digi2/MyCPU/Fordito/memoria.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/toplevel.vhd
+  C:/Users/progenor/Downloads/memoria.vhd
+  C:/Users/progenor/Downloads/toplevel.vhd
 }
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
