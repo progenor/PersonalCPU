@@ -1,7 +1,7 @@
 Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2023 Advanced Micro Devices, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2023.2 (win64) Build 4029153 Fri Oct 13 20:14:34 MDT 2023
-| Date         : Mon Feb 23 07:31:58 2026
+| Date         : Mon Feb 23 07:40:40 2026
 | Host         : progenorLaptop running 64-bit major release  (build 9200)
 | Command      : report_control_sets -verbose -file toplevel_control_sets_placed.rpt
 | Design       : toplevel
@@ -58,12 +58,12 @@ Table of Contents
 +--------------+-----------------------+------------------------+-----------------+--------------+
 | Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
 +--------------+-----------------------+------------------------+-----------------+--------------+
-| No           | No                    | No                     |              94 |           46 |
+| No           | No                    | No                     |              94 |           42 |
 | No           | No                    | Yes                    |               0 |            0 |
 | No           | Yes                   | No                     |               1 |            1 |
-| Yes          | No                    | No                     |            1762 |          648 |
+| Yes          | No                    | No                     |            1762 |          659 |
 | Yes          | No                    | Yes                    |               0 |            0 |
-| Yes          | Yes                   | No                     |              24 |           16 |
+| Yes          | Yes                   | No                     |              24 |           14 |
 +--------------+-----------------------+------------------------+-----------------+--------------+
 
 
@@ -75,108 +75,108 @@ Table of Contents
 +------------------------------------------+--------------------------------------------------+---------------------------------------+------------------+----------------+--------------+
 |  test_clk_OBUF_BUFG                      |                                                  | data_inter_i_1_n_0                    |                1 |              1 |         1.00 |
 |  test_clk_OBUF_BUFG                      | data_inter_i_1_n_0                               |                                       |                1 |              1 |         1.00 |
-|  test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/PortId_Sel_reg_1[0]      |                                       |                1 |              3 |         3.00 |
+|  test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/PortId_Sel_reg_1[0]      |                                       |                2 |              3 |         1.50 |
 |  processor/PFC_inst/phasenum_reg[1]_5[0] |                                                  |                                       |                1 |              4 |         4.00 |
-|  processor/PFC_inst/phasenum_reg[1]_6[0] |                                                  |                                       |                2 |              4 |         2.00 |
-|  test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/inport                   | processor/IfAndDec_inst/Rd_strobe_reg |                3 |              4 |         1.33 |
+|  processor/PFC_inst/phasenum_reg[1]_6[0] |                                                  |                                       |                1 |              4 |         4.00 |
 |  test_clk_OBUF_BUFG                      | sel                                              | data_inter_i_1_n_0                    |                1 |              4 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/PFC_inst/IOwr_reg_1                    |                                       |                4 |              5 |         1.25 |
-|  processor/PFC_inst/phasenum_reg[1]_0[0] |                                                  |                                       |                3 |              6 |         2.00 |
+|  test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/inport                   | processor/IfAndDec_inst/Rd_strobe_reg |                1 |              4 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/PFC_inst/IOwr_reg_1                    |                                       |                2 |              5 |         2.50 |
+|  processor/PFC_inst/phasenum_reg[1]_0[0] |                                                  |                                       |                2 |              6 |         3.00 |
 |  processor/PFC_inst/phasenum_reg[1]_4[0] |                                                  |                                       |                3 |              6 |         2.00 |
-|  processor/PFC_inst/phasenum_reg[1]_1[0] |                                                  |                                       |                2 |              8 |         4.00 |
 |  processor/PFC_inst/phasenum_reg[1]_3[0] |                                                  |                                       |                2 |              8 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Execute_reg[1]           |                                       |                4 |              8 |         2.00 |
-|  test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/PortId_Sel_reg_2[0]      |                                       |                2 |              8 |         4.00 |
-|  test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/PortId_Sel_reg_0[0]      |                                       |                1 |              8 |         8.00 |
-| ~test_clk_OBUF_BUFG                      | processor/PFC_inst/IOrd_reg_0                    |                                       |                2 |              8 |         4.00 |
+|  processor/PFC_inst/phasenum_reg[1]_1[0] |                                                  |                                       |                2 |              8 |         4.00 |
 | ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Execute_reg[0]           |                                       |                8 |              8 |         1.00 |
+|  test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/PortId_Sel_reg_0[0]      |                                       |                1 |              8 |         8.00 |
+|  test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/PortId_Sel_reg_2[0]      |                                       |                2 |              8 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Execute_reg[1]           |                                       |                4 |              8 |         2.00 |
+| ~test_clk_OBUF_BUFG                      | processor/PFC_inst/IOrd_reg_0                    |                                       |                2 |              8 |         4.00 |
 | ~test_clk_OBUF_BUFG                      |                                                  |                                       |                5 |              9 |         1.80 |
-|  processor/PFC_inst/phasenum_reg[1]_2[0] |                                                  |                                       |                4 |             12 |         3.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[9]_166       |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[11]_90            |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/RW_reg_inv               |                                       |                7 |             16 |         2.29 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[47]_155           |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[3]_82             |                                       |                9 |             16 |         1.78 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[2]_81             |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[15]_94            |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[5]_84             |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[10]_89            |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[13]_92            |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[1]_80             |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[6]_178       |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[12]_91            |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[6]_85             |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[7]_86             |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[8]_87             |                                       |                3 |             16 |         5.33 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[4]_83             |                                       |                9 |             16 |         1.78 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[14]_93            |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[9]_88             |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[60]_152      |                                       |                7 |             16 |         2.29 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[15]_156      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/PFC_inst/Mrd_reg_0[0]                  | processor/PFC_inst/SR[0]              |               12 |             16 |         1.33 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Data_Out_y_reg[1]_1 |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Mwr_reg             |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[39]_168      |                                       |                7 |             16 |         2.29 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[40]_161      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[41]_134      |                                       |                3 |             16 |         5.33 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[42]_132      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[38]_137      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[25]_146      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[17]_188      |                                       |                3 |             16 |         5.33 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[21]_142      |                                       |                3 |             16 |         5.33 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[24]_163      |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[12]_159      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[1]_181       |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[23]_173      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[28]_153      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[14]_157      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[20]_176      |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[2]_182       |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[31]_151      |                                       |                7 |             16 |         2.29 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[32]_136      |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[37]_171      |                                       |                3 |             16 |         5.33 |
+|  processor/PFC_inst/phasenum_reg[1]_2[0] |                                                  |                                       |                3 |             12 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[22]_139      |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[30]_138      |                                       |                9 |             16 |         1.78 |
 | ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[13]_158      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[18]_187      |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[10]_165      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[22]_139      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[29]_141      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[26]_145      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[27]_144      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[16]_190      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[19]_143      |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[11]_164      |                                       |               10 |             16 |         1.60 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[30]_138      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[33]_135      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[35]_133      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[34]_186      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[36]_172      |                                       |                3 |             16 |         5.33 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[43]_131      |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[4]_180       |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[50]_185      |                                       |                7 |             16 |         2.29 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[54]_174      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[55]_169      |                                       |                3 |             16 |         5.33 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[57]_130      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[51]_184      |                                       |                7 |             16 |         2.29 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[58]_162      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[5]_179       |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[53]_170      |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[46]_148      |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[52]_175      |                                       |                4 |             16 |         4.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[56]_160      |                                       |                7 |             16 |         2.29 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[59]_129      |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[44]_150      |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[29]_141      |                                       |                7 |             16 |         2.29 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[11]_164      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[14]_157      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[27]_144      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[32]_136      |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[12]_159      |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[16]_190      |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[24]_163      |                                       |                9 |             16 |         1.78 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[40]_161      |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[43]_131      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[44]_150      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[21]_142      |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[31]_151      |                                       |                7 |             16 |         2.29 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[41]_134      |                                       |                3 |             16 |         5.33 |
 | ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[45]_149      |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[48]_183      |                                       |                7 |             16 |         2.29 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[49]_189      |                                       |                3 |             16 |         5.33 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[7]_177       |                                       |                8 |             16 |         2.00 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[63]_154      |                                       |               10 |             16 |         1.60 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[61]_140      |                                       |                5 |             16 |         3.20 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[8]_167       |                                       |                6 |             16 |         2.67 |
-| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[62]_147      |                                       |                3 |             16 |         5.33 |
-|  processor/PFC_inst/Execute              |                                                  |                                       |               11 |             18 |         1.64 |
-|  test_clk_OBUF_BUFG                      |                                                  |                                       |               13 |             19 |         1.46 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[19]_143      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[48]_183      |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[25]_146      |                                       |                8 |             16 |         2.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[49]_189      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[4]_180       |                                       |                7 |             16 |         2.29 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[2]_182       |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[17]_188      |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[34]_186      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[38]_137      |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[39]_168      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[46]_148      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[1]_181       |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[18]_187      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[33]_135      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[42]_132      |                                       |                8 |             16 |         2.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[35]_133      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[10]_165      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[20]_176      |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[26]_145      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[28]_153      |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[23]_173      |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[36]_172      |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[15]_156      |                                       |                7 |             16 |         2.29 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[55]_169      |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[61]_140      |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[51]_184      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[54]_174      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[5]_179       |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[60]_152      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[59]_129      |                                       |                7 |             16 |         2.29 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[52]_175      |                                       |                7 |             16 |         2.29 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[9]_166       |                                       |                9 |             16 |         1.78 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[57]_130      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[50]_185      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[53]_170      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[63]_154      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[56]_160      |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[62]_147      |                                       |                9 |             16 |         1.78 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[7]_177       |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[8]_167       |                                       |                8 |             16 |         2.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[58]_162      |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[6]_178       |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/RW_reg_inv               |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[3]_82             |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[13]_92            |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[12]_91            |                                       |                7 |             16 |         2.29 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[1]_80             |                                       |                8 |             16 |         2.00 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[47]_155           |                                       |                8 |             16 |         2.00 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[8]_87             |                                       |                8 |             16 |         2.00 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[4]_83             |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[6]_85             |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[9]_88             |                                       |               10 |             16 |         1.60 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[10]_89            |                                       |                9 |             16 |         1.78 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[2]_81             |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[7]_86             |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[14]_93            |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[5]_84             |                                       |                7 |             16 |         2.29 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[11]_90            |                                       |                5 |             16 |         3.20 |
+| ~test_clk_OBUF_BUFG                      | processor/IfAndDec_inst/Tarolo[15]_94            |                                       |                7 |             16 |         2.29 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Data_Out_y_reg[1]_1 |                                       |                6 |             16 |         2.67 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Mwr_reg             |                                       |                4 |             16 |         4.00 |
+| ~test_clk_OBUF_BUFG                      | processor/RegisterBlock_inst/Tarolo[37]_171      |                                       |                3 |             16 |         5.33 |
+| ~test_clk_OBUF_BUFG                      | processor/PFC_inst/Mrd_reg_0[0]                  | processor/PFC_inst/SR[0]              |               12 |             16 |         1.33 |
+|  processor/PFC_inst/Execute              |                                                  |                                       |                9 |             18 |         2.00 |
+|  test_clk_OBUF_BUFG                      |                                                  |                                       |               14 |             19 |         1.36 |
 | ~test_clk_OBUF_BUFG                      | processor/PFC_inst/E[0]                          |                                       |               31 |             32 |         1.03 |
-| ~test_clk_OBUF_BUFG                      | processor/PFC_inst/eqOp                          |                                       |              159 |            401 |         2.52 |
+| ~test_clk_OBUF_BUFG                      | processor/PFC_inst/eqOp                          |                                       |              161 |            401 |         2.49 |
 +------------------------------------------+--------------------------------------------------+---------------------------------------+------------------+----------------+--------------+
 
 
