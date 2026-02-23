@@ -95,8 +95,8 @@ read_vhdl -library xil_defaultlib {
   C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/PFC.vhd
   C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/PortLogic.vhd
   C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/RegisterBlock.vhd
-  C:/Users/progenor/Downloads/memoria.vhd
-  C:/Users/progenor/Downloads/toplevel.vhd
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/memoria.vhd
+  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/toplevel.vhd
 }
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being

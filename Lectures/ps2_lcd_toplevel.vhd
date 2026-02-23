@@ -18,10 +18,14 @@
 -- 
 ----------------------------------------------------------------------------------
 
+
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+library UNISIM;
+use UNISIM.VComponents.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -33,8 +37,8 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --use UNISIM.VComponents.all;
 
 entity toplevel is
-    Port ( clk : in STD_LOGIC;
-           btn : in STD_LOGIC_VECTOR (3 downto 0);
+    Port ( clk_in : in STD_LOGIC;
+           --btn : in STD_LOGIC_VECTOR (3 downto 0);
            led : out STD_LOGIC_VECTOR (3 downto 0);
 		   psdata : in std_logic;
 		   psclock : in std_logic;
@@ -48,40 +52,26 @@ end toplevel;
 
 architecture Behavioral of toplevel is
 
---component kcpsm6 is
---  generic(                 hwbuild : std_logic_vector(7 downto 0) := X"00";
---                  interrupt_vector : std_logic_vector(11 downto 0) := X"3FF";
---           scratch_pad_memory_size : integer := 64);
---  port (                   address : out std_logic_vector(11 downto 0);
---                       instruction : in std_logic_vector(17 downto 0);
---                       bram_enable : out std_logic;
---                           in_port : in std_logic_vector(7 downto 0);
---                          out_port : out std_logic_vector(7 downto 0);
---                           port_id : out std_logic_vector(7 downto 0);
---                      write_strobe : out std_logic;
---                    k_write_strobe : out std_logic;
---                       read_strobe : out std_logic;
---                         interrupt : in std_logic;
---                     interrupt_ack : out std_logic;
---                             sleep : in std_logic;
---                             reset : in std_logic;
---                               clk : in std_logic);
---  end component;
- component CPU is
-    Port ( clk : in STD_LOGIC;
-           Reset : in STD_LOGIC;
-           PortDataIn : in STD_LOGIC_VECTOR (15 downto 0);
-           interrupt : in STD_LOGIC;
-           instruction : in STD_LOGIC_VECTOR (17 downto 0);
-           PortDataOut : out STD_LOGIC_VECTOR (15 downto 0);
-           PortID : out STD_LOGIC_VECTOR (7 downto 0);
-           ReadStrobe : out STD_LOGIC;
-           WriteStrobe : out STD_LOGIC;
-           interrupt_Acknowledge : out STD_LOGIC;
-           instruction_Address : out STD_LOGIC_VECTOR (11 downto 0));
-end component;
+component kcpsm6 is
+  generic(                 hwbuild : std_logic_vector(7 downto 0) := X"00";
+                  interrupt_vector : std_logic_vector(11 downto 0) := X"3FF";
+           scratch_pad_memory_size : integer := 64);
+  port (                   address : out std_logic_vector(11 downto 0);
+                       instruction : in std_logic_vector(17 downto 0);
+                       bram_enable : out std_logic;
+                           in_port : in std_logic_vector(7 downto 0);
+                          out_port : out std_logic_vector(7 downto 0);
+                           port_id : out std_logic_vector(7 downto 0);
+                      write_strobe : out std_logic;
+                    k_write_strobe : out std_logic;
+                       read_strobe : out std_logic;
+                         interrupt : in std_logic;
+                     interrupt_ack : out std_logic;
+                             sleep : in std_logic;
+                             reset : in std_logic;
+                               clk : in std_logic);
+  end component;
   
-
   component MyPS2 is
   generic(             C_FAMILY : string := "7S"; 
               C_RAM_SIZE_KWORDS : integer := 2;
@@ -92,22 +82,9 @@ end component;
                   rdl : out std_logic;                    
                   clk : in std_logic);
   end component;
-
-
- component prog_memory is
-  generic(             C_FAMILY : string := "S6"; 
-              C_RAM_SIZE_KWORDS : integer := 1;
-           C_JTAG_LOADER_ENABLE : integer := 0);
-  Port (      address : in std_logic_vector(11 downto 0);
-          instruction : out std_logic_vector(17 downto 0);
-               enable : in std_logic;
-                  rdl : out std_logic;                    
-                  clk : in std_logic);
-  end component;
   
-
-    component clk_div is
-    Port ( clk : in STD_LOGIC;
+  component clk_div is
+    Port ( clk_in : in STD_LOGIC;
            clk_div : out STD_LOGIC;
            reset : in STD_LOGIC
            );
@@ -124,22 +101,23 @@ end component;
 --  -- Status and control signals
 --  reset             : in     std_logic;
 --  locked            : out    std_logic;
---  clk           : in     std_logic
+--  clk_in           : in     std_logic
 -- );
 --end component;
+  
 
   signal address : std_logic_vector(11 downto 0);
   signal instruction : std_logic_vector(17 downto 0);
   signal portid : std_logic_vector(7 downto 0);
-  signal inport : std_logic_vector(15 downto 0);
-  signal outport : std_logic_vector(15 downto 0);
+  signal inport : std_logic_vector(7 downto 0);
+  signal outport : std_logic_vector(7 downto 0);
   signal wrstr : std_logic;
   signal rdstr : std_logic;
   signal bren : std_logic;
-
-
-
-   -- signal addr_ps2 : std_logic_vector(9 downto 0);
+  signal clk : std_logic;
+  
+  
+ -- signal addr_ps2 : std_logic_vector(9 downto 0);
 --	signal instr_ps2 : std_logic_vector(17 downto 0);
 --	signal out_port_ps2_prg, in_port_ps2_prg, port_id_ps2_prg : std_logic_vector(7 downto 0);
 --	signal read_strobe_ps2_prg, write_strobe_ps2_prg,
@@ -156,48 +134,83 @@ end component;
 	signal psdatabuff : std_logic_vector(7 downto 0);
     signal lcd_data_buff : std_logic_vector(7 downto 0);
     signal lcd_control_buff : std_logic_vector(2 downto 0);
-
+    
+    
+    
 begin
 
-process(clk,wrstr,portid) -- write 
-begin
-if clk'event and clk='1' then
-if wrstr='1' and portid=x"05" then  -- OUTPUT s0, 05
-    led<=outport(3 downto 0);
-end if;
-end if;
-end process;
+inst_clkdiv: clk_div 
+    Port Map( clk_in => clk_in,
+           clk_div => clk,
+           reset => reset
+           );
+           
+           
+--   inst_clkdiv: clk_div        
+--      port map (         
+--      clkfb_in => clkfb_in,        
+--     -- Clock out ports          
+--      clk_div => clk_div,        
+--      clkfb_out => clkfb_out,        
+--     -- Status and control signals                        
+--      reset => reset,        
+--      locked => locked,        
+--      -- Clock in ports        
+--      clk_in => clk_in        
+--    );        
+           
+           
+           
+--process(clk,wrstr,portid)
+--begin
+--if clk'event and clk='1' then
+--if wrstr='1' and portid=x"00" then
+--    led<=outport(3 downto 0);
+--end if;
+--end if;
+--end process;
 
-process(clk,rdstr,portid)  -- read
-begin
-if clk'event and clk='1' then
-if rdstr='1' and portid=x"06" then  -- INPUT s0, 06
-    inport<="000000000000"&btn;
-end if;
-end if;
-end process;
+--process(clk,rdstr,portid)
+--begin
+--if clk'event and clk='1' then
+--if rdstr='1' and portid=x"00" then
+--    inport<="0000"&btn;
+--end if;
+--end if;
+--end process;
 
-processor : CPU
+
+processzor : kcpsm6
+generic map (
+   hwbuild => x"00",
+   interrupt_vector => x"3ff",
+   scratch_pad_memory_size => 64
+)
 port map (
-         instruction_Address =>  address,
-       instruction =>  instruction,
-           PortDataIn =>  inport,
-          PortDataOut =>  outport,
-           PortID =>  portid,
-      WriteStrobe =>  wrstr,
-       ReadStrobe =>  rdstr,
-         interrupt =>  btn(0),
-     interrupt_Acknowledge =>  open,
-             Reset =>  '0',
-               clk =>  clk
+                         address =>  address,
+                       instruction =>  instruction,
+                       bram_enable =>  bren,
+                           in_port =>  inport,
+                          out_port =>  outport,
+                           port_id =>  portid,
+                      write_strobe =>  wrstr,
+                    k_write_strobe =>  open,
+                       read_strobe =>  rdstr,
+                         interrupt =>  interrupt_req,
+                     interrupt_ack =>  interrupt_ack,
+                             sleep =>  '0',
+                             reset =>  reset,
+                               clk =>  clk
+
 );
- mem: prog_memory
-  generic map(C_FAMILY => "7S", 
+
+ memoria: MyPS2
+  generic map(             C_FAMILY => "7S", 
               C_RAM_SIZE_KWORDS => 2,
            C_JTAG_LOADER_ENABLE => 0)
   Port map(      address => address,
           instruction => instruction,
-               enable => '1',
+               enable => bren,
                   rdl => open,                   
                   clk => clk
 );
