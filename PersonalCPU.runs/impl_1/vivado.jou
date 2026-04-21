@@ -1,14 +1,23 @@
 #-----------------------------------------------------------
-# Vivado v2023.2 (64-bit)
-# SW Build 4029153 on Fri Oct 13 20:14:34 MDT 2023
-# IP Build 4028589 on Sat Oct 14 00:45:43 MDT 2023
-# SharedData Build 4025554 on Tue Oct 10 17:18:54 MDT 2023
-# Start of session at: Mon Feb 23 07:39:45 2026
-# Process ID: 14016
-# Current directory: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/impl_1
-# Command line: vivado.exe -log toplevel.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source toplevel.tcl -notrace
-# Log file: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/impl_1/toplevel.vdi
-# Journal file: C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/impl_1\vivado.jou
-# Running On: progenorLaptop, OS: Windows, CPU Frequency: 3194 MHz, CPU Physical cores: 16, Host memory: 16541 MB
+# Vivado v2025.2 (64-bit)
+# SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+# IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+# SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+# Start of session at: Tue Apr 21 11:16:40 2026
+# Process ID         : 22636
+# Current directory  : C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.runs/impl_1
+# Command line       : vivado.exe -log toplevel.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source toplevel.tcl -notrace
+# Log file           : C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.runs/impl_1/toplevel.vdi
+# Journal file       : C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.runs/impl_1\vivado.jou
+# Running On         : ThinkPad-Progenor
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26100
+# Processor Detail   : Intel(R) Core(TM) i7-7820HQ CPU @ 2.90GHz
+# CPU Frequency      : 2904 MHz
+# CPU Physical cores : 4
+# CPU Logical cores  : 8
+# Host memory        : 34227 MB
+# Swap memory        : 2147 MB
+# Total Virtual      : 36375 MB
+# Available Virtual  : 14706 MB
 #-----------------------------------------------------------
-source toplevel.tcl -notrace

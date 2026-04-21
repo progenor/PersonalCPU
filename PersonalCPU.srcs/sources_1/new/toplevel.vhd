@@ -36,7 +36,9 @@ entity toplevel is
            btn : in STD_LOGIC_VECTOR (3 downto 0);
 --           sw1 : in STD_LOGIC;
            led : out STD_LOGIC_VECTOR (3 downto 0);
-           reset : in STD_LOGIC);
+           reset : in STD_LOGIC;
+           psclock : in STD_LOGIC;                     -- PS/2 keyboard clock (T11)
+           psdata : in STD_LOGIC);                     -- PS/2 keyboard data (W14)
 end toplevel;
 
 architecture Behavioral of toplevel is
@@ -55,6 +57,17 @@ architecture Behavioral of toplevel is
            instruction_Address : out STD_LOGIC_VECTOR (11 downto 0));
 end component;
   
+  component PS2_Controller is
+    Port (
+        clk : in STD_LOGIC;
+        reset : in STD_LOGIC;
+        ps2_clk : in STD_LOGIC;
+        ps2_data : in STD_LOGIC;
+        ps2_clk_clean : out STD_LOGIC;
+        ps2_data_clean : out STD_LOGIC;
+        interrupt_req : out STD_LOGIC
+    );
+  end component;
   
   component memoria is
   generic(             C_FAMILY : string := "7S"; 
@@ -66,8 +79,8 @@ end component;
                   rdl : out std_logic;                    
                   clk : in std_logic);
   end component;
-  
 
+  -- CPU and memory signals
   signal address : std_logic_vector(11 downto 0);
   signal instruction : std_logic_vector(17 downto 0);
   signal portid : std_logic_vector(7 downto 0);
@@ -76,6 +89,11 @@ end component;
   signal wrstr : std_logic;
   signal rdstr : std_logic;
   signal bren : std_logic;
+  
+  -- PS/2 controller signals
+  signal ps2_clk_clean : std_logic;
+  signal ps2_data_clean : std_logic;
+  signal ps2_interrupt_req : std_logic;
 
 begin
 
@@ -94,6 +112,10 @@ if clk'event and clk='1' then
 if rdstr='1' and portid=x"05" then
      inport<="000000000000"&btn;
 --    inport<="00000000000"&sw1&btn;
+elsif rdstr='1' and portid=x"01" then
+     -- PS/2 data read at port 0x01
+     -- PS/2 data bit packed at bit 7, rest zeros
+     inport<="000000000000000"&ps2_data_clean;
 end if;
 end if;
 end process;
@@ -108,10 +130,22 @@ port map (
            PortID =>  portid,
       WriteStrobe =>  wrstr,
        ReadStrobe =>  rdstr,
-         interrupt =>  btn(0),
+         interrupt =>  ps2_interrupt_req,
      interrupt_Acknowledge =>  open,
              Reset =>  reset,
                clk =>  clk
+);
+
+-- PS/2 Keyboard Controller Instantiation
+ps2_ctrl : PS2_Controller
+port map (
+         clk =>  clk,
+         reset =>  reset,
+         ps2_clk =>  psclock,
+         ps2_data =>  psdata,
+         ps2_clk_clean =>  ps2_clk_clean,
+         ps2_data_clean =>  ps2_data_clean,
+         interrupt_req =>  ps2_interrupt_req
 );
 
  mem: memoria

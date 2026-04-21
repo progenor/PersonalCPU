@@ -1,7 +1,7 @@
 -------------------------------------
-| Tool Version : Vivado v.2023.2
-| Date         : Mon Feb 23 07:40:12 2026
-| Host         : progenorLaptop
+| Tool Version : Vivado v.2025.2
+| Date         : Tue Apr 21 11:17:29 2026
+| Host         : ThinkPad-Progenor
 | Design       : design_1
 | Device       : xc7z020-clg400-1--
 -------------------------------------

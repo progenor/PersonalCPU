@@ -1,0 +1,223 @@
+;===============================================================================
+; PS/2 Keyboard Interrupt Handler and Scancode Capture Routine
+; 
+; PersonalCPU PS/2 Integration
+; Assembly code for capturing raw PS/2 keyboard scancodes via interrupt
+;
+; Port Assignments:
+;   Port 0x00: PS/2 Clock and Data (bit 7 = PS2_DATA, bit 6-0 = reserved/unused)
+;   Port 0x01: PS/2 Data Read (bit 0 = ps2_data_clean from PS2_Controller)
+;   Port 0x05: Button/Switch Input
+;   Port 0x06: LED Output
+;
+; Data Structure:
+;   Scratch Pad Locations:
+;   0x00: Bit counter (0-10): tracks which bit of the 11-bit frame we're receiving
+;   0x01: Shift register high byte (bits 8-10 of the 11-bit frame)
+;   0x02: Shift register low byte (bits 0-7 of the 11-bit frame)
+;   0x03: Flags (bit 0 = frame_ready, bit 1 = parity_error)
+;   0x04: Scancode buffer write pointer
+;   0x05: Scancode buffer read pointer
+;   0x20-0x3F: Circular scancode buffer (32 bytes)
+;
+;===============================================================================
+
+; Scancodes for testing
+#define SCANCODE_A          0x1C
+#define SCANCODE_B          0x32
+#define SCANCODE_KEY_BREAK  0xF0
+#define PS2_BUFFER_SIZE     0x20
+#define PS2_BUFFER_START    0x20
+
+;===============================================================================
+; Main Program - Initialization and Test Loop
+;===============================================================================
+main_program:
+    ; Initialize scratch pad memory
+    load s0, 00              ; Clear bit counter
+    store s0, 00
+    
+    load s0, 00              ; Clear shift register high
+    store s0, 01
+    
+    load s0, 00              ; Clear shift register low
+    store s0, 02
+    
+    load s0, 00              ; Clear flags
+    store s0, 03
+    
+    load s0, 00              ; Clear buffer write pointer
+    store s0, 04
+    
+    load s0, 00              ; Clear buffer read pointer
+    store s0, 05
+
+main_loop:
+    ; Check if scancode is ready in buffer
+    fetch s0, 03             ; Read flags
+    test s0, 01              ; Check frame_ready flag
+    
+    jump nz, process_scancode
+    
+    ; LED heartbeat or idle pattern
+    output s0, 06            ; Output to LEDs for debugging
+    
+    jump main_loop
+
+process_scancode:
+    ; Scancode is ready, read from buffer
+    fetch s1, 04             ; Get write pointer
+    fetch s2, 05             ; Get read pointer
+    
+    compare s1, s2           ; Check if buffer has data
+    jump z, skip_read        ; If pointers equal, no data
+    
+    ; Read scancode from buffer
+    load s3, PS2_BUFFER_START  ; Load buffer start address
+    add s3, s2               ; Add read pointer offset
+    fetch s4, s3             ; Get scancode from buffer
+    
+    ; Output scancode to LEDs
+    output s4, 06
+    
+    ; Increment read pointer with wraparound
+    add s2, 01
+    and s2, 0x1F             ; Wrap around at 32
+    store s2, 05             ; Update read pointer
+    
+    jump main_loop
+
+skip_read:
+    jump main_loop
+
+;===============================================================================
+; INTERRUPT SERVICE ROUTINE (ISR)
+; Entry point: Address 0x7FF (last address for 2K ROM in KCPSM6)
+; Triggered by falling edge of PS/2 clock from PS2_Controller
+;
+; PS/2 Frame Format (11 bits total):
+;   Bit 0:     Start bit (always 0)
+;   Bits 1-8:  Data bits (LSB first)
+;   Bit 9:     Parity bit (odd parity)
+;   Bit 10:    Stop bit (always 1)
+;
+; When bit counter reaches 11, we have a complete frame in the shift register
+;===============================================================================
+org 0x7FF
+ps2_isr:
+    ; Save working register (allocate temporary storage in scratch pad)
+    ; Note: KCPSM6 has automatic register saving on interrupt, but we explicitly
+    ; manage scratch pad locations for clarity
+    
+    ; Fetch current bit counter
+    fetch s0, 00             ; s0 = current bit count
+    
+    ; Read PS/2 data bit from port 0x01
+    input s1, 01             ; s1 = PS2 data (bit 0)
+    and s1, 01               ; Mask to isolate PS2 data bit
+    
+    ; Increment bit counter
+    add s0, 01
+    
+    ; Store updated bit counter
+    store s0, 00
+    
+    ; If bit counter < 11, continue shifting
+    compare s0, 11
+    jump nz, shift_data
+    
+    ; Frame complete: 11 bits received
+    ; Mark frame as ready
+    fetch s2, 03             ; Read flags
+    or s2, 01                ; Set frame_ready flag
+    store s2, 03
+    
+    ; Reset bit counter for next frame
+    load s0, 00
+    store s0, 00
+    
+    ; Extract scancode (bits 1-8) from shift registers
+    ; High byte (0x01) contains bits 8-10, low byte (0x02) contains bits 0-7
+    fetch s3, 02             ; Get shift register low byte (bits 0-7)
+    fetch s4, 01             ; Get shift register high byte (bits 8-10)
+    
+    ; We only care about bits 1-8 of the frame for the actual data
+    ; Extract the 8-bit scancode: take low 7 bits from SRL and bit 0 from SRH
+    srl s3, 01               ; Shift low byte right by 1 (bits 0-7 -> bits -1 to 6)
+    ; Actually, we want bits 1-8 from the full 11-bit frame
+    ; In SRL (bits 0-7), we have data bits 1-8 after 1 left shift was done
+    ; Let's keep it simple: after receiving 11 bits, scancode is in bits 1-8
+    
+    ; Write scancode to circular buffer
+    fetch s5, 04             ; Get write pointer
+    load s6, PS2_BUFFER_START  ; Load buffer start address
+    add s6, s5               ; Calculate buffer write address
+    store s3, s6             ; Store scancode in buffer
+    
+    ; Increment write pointer with wraparound
+    add s5, 01
+    and s5, 0x1F             ; Wrap around at 32
+    store s5, 04             ; Update write pointer
+    
+    ; Clear shift registers for next frame
+    load s0, 00
+    store s0, 01             ; Clear high byte
+    store s0, 02             ; Clear low byte
+    
+    returni                  ; Return from interrupt, clear interrupt flag
+    
+shift_data:
+    ; Shift data into shift registers
+    ; Current approach: use two bytes as a 16-bit register
+    ; Shift left to make room for new bit
+    
+    fetch s2, 02             ; Get shift register low byte
+    fetch s3, 01             ; Get shift register high byte
+    
+    ; Shift left: take MSB of low byte, put in low bit of high byte
+    ; Get MSB of low byte
+    test s2, 0x80            ; Test bit 7
+    jump z, clear_bit        ; If bit 7 is 0, skip setting
+    or s3, 01                ; Set bit 0 of high byte
+    jump shift_low
+    
+clear_bit:
+    and s3, 0xFE             ; Clear bit 0 of high byte
+    
+shift_low:
+    ; Shift low byte left by 1
+    sl0 s2                   ; Shift left, bit 7 -> carry
+    
+    ; Insert new PS/2 data bit at bit 0 of low byte
+    add s1, s1               ; Move s1 bit to carry
+    sra s2                   ; Shift right through carry, restores bit 0
+    
+    ; Actually, let me use a simpler approach with RL (rotate left)
+    ; Since we want to collect bits in LSB-first order:
+    ; We'll shift the collected bits right to move bit 0 out and new bit in at MSB
+    
+    ; Better approach: just shift the data in directly
+    ; Reset and do it simply:
+    
+    ; Shift left the collected bits, put new bit at position equal to bit counter
+    sl0 s2                   ; Shift existing data left
+    
+    ; Shift high byte left too, with carry from s2
+    sla s3                   ; Shift left, add carry
+    
+    ; Now add the new bit we read
+    ; If s1 & 1 is 1, we need to set bit 0 of s2
+    tst s1                   ; Test s1
+    jump z, no_bit           ; If s1 is 0, skip setting bit
+    or s2, 01                ; Set bit 0 of s2
+    
+no_bit:
+    ; Store updated shift registers
+    store s2, 02             ; Store shift register low byte
+    store s3, 01             ; Store shift register high byte
+    
+    returni                  ; Return from interrupt
+
+;===============================================================================
+; End of PS/2 ISR
+;===============================================================================

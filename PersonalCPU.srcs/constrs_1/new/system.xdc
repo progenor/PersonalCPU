@@ -15,24 +15,25 @@ set_property -dict { PACKAGE_PIN L20   IOSTANDARD LVCMOS33 } [get_ports { btn[2]
 set_property -dict { PACKAGE_PIN L19   IOSTANDARD LVCMOS33 } [get_ports { btn[3] }]; #IO_L9P_T1_DQS_AD3P_35 Sch=btn[3]  
 
 # Switches
-set_property -dict { PACKAGE_PIN M20   IOSTANDARD LVCMOS33 } [get_ports { LEDsw }]; #IO_L7N_T1_AD2N_35 Sch=sw[0]
+#set_property -dict { PACKAGE_PIN M20   IOSTANDARD LVCMOS33 } [get_ports { LEDsw }]; #IO_L7N_T1_AD2N_35 Sch=sw[0] (UNUSED)
 set_property -dict { PACKAGE_PIN M19   IOSTANDARD LVCMOS33 } [get_ports { reset }]; #IO_L7P_T1_AD2P_35 Sch=sw[1] (Moved reset here)
 
-# PmodA - Mapped to lcd_data to prevent unassigned pin errors
-set_property -dict { PACKAGE_PIN Y18   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[0] }]; #IO_L17P_T2_34 Sch=ja_p[1]
-set_property -dict { PACKAGE_PIN Y19   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[1] }]; #IO_L17N_T2_34 Sch=ja_n[1]
-set_property -dict { PACKAGE_PIN Y16   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[2] }]; #IO_L7P_T1_34 Sch=ja_p[2]
-set_property -dict { PACKAGE_PIN Y17   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[3] }]; #IO_L7N_T1_34 Sch=ja_n[2]
-set_property -dict { PACKAGE_PIN U18   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[4] }]; #IO_L12P_T1_MRCC_34 Sch=ja_p[3]
-set_property -dict { PACKAGE_PIN U19   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[5] }]; #IO_L12N_T1_MRCC_34 Sch=ja_n[3]
-set_property -dict { PACKAGE_PIN W18   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[6] }]; #IO_L22P_T3_34 Sch=ja_p[4]
-set_property -dict { PACKAGE_PIN W19   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[7] }]; #IO_L22N_T3_34 Sch=ja_n[4]
+# PmodA - LCD Data (COMMENTED OUT - not yet integrated with PS2)
+#set_property -dict { PACKAGE_PIN Y18   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[0] }]; #IO_L17P_T2_34 Sch=ja_p[1]
+#set_property -dict { PACKAGE_PIN Y19   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[1] }]; #IO_L17N_T2_34 Sch=ja_n[1]
+#set_property -dict { PACKAGE_PIN Y16   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[2] }]; #IO_L7P_T1_34 Sch=ja_p[2]
+#set_property -dict { PACKAGE_PIN Y17   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[3] }]; #IO_L7N_T1_34 Sch=ja_n[2]
+#set_property -dict { PACKAGE_PIN U18   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[4] }]; #IO_L12P_T1_MRCC_34 Sch=ja_p[3]
+#set_property -dict { PACKAGE_PIN U19   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[5] }]; #IO_L12N_T1_MRCC_34 Sch=ja_n[3]
+#set_property -dict { PACKAGE_PIN W18   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[6] }]; #IO_L22P_T3_34 Sch=ja_p[4]
+#set_property -dict { PACKAGE_PIN W19   IOSTANDARD LVCMOS33 } [get_ports { lcd_data[7] }]; #IO_L22N_T3_34 Sch=ja_n[4]
 
-# PmodB - PS2 Pins + Missing LCD Control & Test Clk
-set_property -dict { PACKAGE_PIN W14   IOSTANDARD LVCMOS33 } [get_ports { psdata }]; #IO_L8P_T1_34 Sch=jb_p[1]
-set_property -dict { PACKAGE_PIN T11   IOSTANDARD LVCMOS33 } [get_ports { psclock }]; #IO_L1P_T0_34 Sch=jb_p[2]
+# PmodB - PS2 Keyboard Interface (ACTIVE)
+set_property -dict { PACKAGE_PIN W14   IOSTANDARD LVCMOS33 } [get_ports { psdata }]; #IO_L8P_T1_34 Sch=jb_p[1] PS2_DATA
+set_property -dict { PACKAGE_PIN T11   IOSTANDARD LVCMOS33 } [get_ports { psclock }]; #IO_L1P_T0_34 Sch=jb_p[2] PS2_CLK
 
-set_property -dict { PACKAGE_PIN Y14   IOSTANDARD LVCMOS33 } [get_ports { lcd_control[0] }]; #IO_L8N_T1_34 Sch=jb_n[1]
-set_property -dict { PACKAGE_PIN T10   IOSTANDARD LVCMOS33 } [get_ports { lcd_control[1] }]; #IO_L1N_T0_34 Sch=jb_n[2]
-set_property -dict { PACKAGE_PIN V16   IOSTANDARD LVCMOS33 } [get_ports { lcd_control[2] }]; #IO_L18P_T2_34 Sch=jb_p[3]
-set_property -dict { PACKAGE_PIN W16   IOSTANDARD LVCMOS33 } [get_ports { test_clk }];       #IO_L18N_T2_34 Sch=jb_n[3]
+# LCD Control Signals (COMMENTED OUT - future integration)
+#set_property -dict { PACKAGE_PIN Y14   IOSTANDARD LVCMOS33 } [get_ports { lcd_control[0] }]; #IO_L8N_T1_34 Sch=jb_n[1]
+#set_property -dict { PACKAGE_PIN T10   IOSTANDARD LVCMOS33 } [get_ports { lcd_control[1] }]; #IO_L1N_T0_34 Sch=jb_n[2]
+#set_property -dict { PACKAGE_PIN V16   IOSTANDARD LVCMOS33 } [get_ports { lcd_control[2] }]; #IO_L18P_T2_34 Sch=jb_p[3]
+#set_property -dict { PACKAGE_PIN W16   IOSTANDARD LVCMOS33 } [get_ports { test_clk }];       #IO_L18N_T2_34 Sch=jb_n[3]

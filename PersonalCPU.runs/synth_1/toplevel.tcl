@@ -4,7 +4,7 @@
 
 set TIME_start [clock seconds] 
 namespace eval ::optrace {
-  variable script "C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.runs/synth_1/toplevel.tcl"
+  variable script "C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.runs/synth_1/toplevel.tcl"
   variable category "vivado_synth"
 }
 
@@ -55,48 +55,33 @@ if {$::dispatch::connected} {
   }
 }
 
-proc create_report { reportName command } {
-  set status "."
-  append status $reportName ".fail"
-  if { [file exists $status] } {
-    eval file delete [glob $status]
-  }
-  send_msg_id runtcl-4 info "Executing : $command"
-  set retval [eval catch { $command } msg]
-  if { $retval != 0 } {
-    set fp [open $status w]
-    close $fp
-    send_msg_id runtcl-5 warning "$msg"
-  }
-}
 OPTRACE "synth_1" START { ROLLUP_AUTO }
-set_param chipscope.maxJobs 4
+set_param general.usePosixSpawnForFork 1
 OPTRACE "Creating in-memory project" START { }
 create_project -in_memory -part xc7z020clg400-1
 
 set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
-set_property webtalk.parent_dir C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.cache/wt [current_project]
-set_property parent.project_path C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.xpr [current_project]
+set_property webtalk.parent_dir C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.cache/wt [current_project]
+set_property parent.project_path C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.xpr [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language VHDL [current_project]
-set_property board_part tul.com.tw:pynq-z2:part0:1.0 [current_project]
-set_property ip_output_repo c:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.cache/ip [current_project]
+set_property ip_output_repo c:/Users/wqewqe/School/PersonalCPU/PersonalCPU.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
 read_vhdl -library xil_defaultlib {
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/ALU.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/CPU.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/DataMemory.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/IfAndDec.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/Mux.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/PFC.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/PortLogic.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/new/RegisterBlock.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/memoria.vhd
-  C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/toplevel.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/new/ALU.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/new/CPU.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/new/DataMemory.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/new/IfAndDec.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/new/Mux.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/PFC.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/new/PortLogic.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/new/RegisterBlock.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/prog_memory.vhd
+  C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/sources_1/imports/Downloads/toplevel.vhd
 }
 OPTRACE "Adding files" END { }
 # Mark all dcp files as not used in implementation to prevent them from being
@@ -107,12 +92,12 @@ OPTRACE "Adding files" END { }
 foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
   set_property used_in_implementation false $dcp
 }
-read_xdc C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/constrs_1/new/system.xdc
-set_property used_in_implementation false [get_files C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/constrs_1/new/system.xdc]
+read_xdc C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/constrs_1/new/system.xdc
+set_property used_in_implementation false [get_files C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/constrs_1/new/system.xdc]
 
 set_param ips.enableIPCacheLiteLoad 1
 
-read_checkpoint -auto_incremental -incremental C:/Users/progenor/VivadoProjects/PersonalCPU/PersonalCPU.srcs/utils_1/imports/synth_1/Mux.dcp
+read_checkpoint -auto_incremental -incremental C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.srcs/utils_1/imports/synth_1/Mux.dcp
 close [open __synthesis_is_running__ w]
 
 OPTRACE "synth_design" START { }
@@ -129,7 +114,7 @@ set_param constraints.enableBinaryConstraints false
 write_checkpoint -force -noxdef toplevel.dcp
 OPTRACE "write_checkpoint" END { }
 OPTRACE "synth reports" START { REPORT }
-create_report "synth_1_synth_report_utilization_0" "report_utilization -file toplevel_utilization_synth.rpt -pb toplevel_utilization_synth.pb"
+generate_parallel_reports -reports { "report_utilization -file toplevel_utilization_synth.rpt -pb toplevel_utilization_synth.pb"  } 
 OPTRACE "synth reports" END { }
 file delete __synthesis_is_running__
 close [open __synthesis_is_complete__ w]

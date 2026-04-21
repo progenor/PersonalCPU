@@ -1,0 +1,6 @@
+- PS/2 csomagok beolvasasa, PicoBl megszakítás rutinnal
+- Felengedesi esemenyek kiszurese (az F0h tartalmu es az azt koveto csomag eldobasa)
+- Scancode-ASCII kod atalakitas 16 billentyure (0-9, A-F)
+- LCD interfesz: Inicializalas, karakterkod(ASCII)-kuldo, parancskuldo fuggvenyek megirasa
+- ASCII kodok kuldese az LCDre, a billentyuzetrol erkezo scancodok alapjan.
+- ASCII kodok kuldese szamitogep fele, UART TX, RS232-USB atalakito segitsegevel.
