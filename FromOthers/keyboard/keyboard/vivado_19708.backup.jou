@@ -1,0 +1,54 @@
+#-----------------------------------------------------------
+# Vivado v2025.2 (64-bit)
+# SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+# IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+# SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+# Start of session at: Sat Mar  7 16:53:44 2026
+# Process ID         : 19708
+# Current directory  : C:/Users/Levi/Downloads/wetransfer_keyboard_2026-03-06_1857/keyboard
+# Command line       : vivado.exe -gui_launcher_event rodinguilauncherevent4180 C:\Users\Levi\Downloads\wetransfer_keyboard_2026-03-06_1857\keyboard\keyboard.xpr
+# Log file           : C:/Users/Levi/Downloads/wetransfer_keyboard_2026-03-06_1857/keyboard/vivado.log
+# Journal file       : C:/Users/Levi/Downloads/wetransfer_keyboard_2026-03-06_1857/keyboard\vivado.jou
+# Running On         : Levi
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26200
+# Processor Detail   : AMD Ryzen 7 5800H with Radeon Graphics         
+# CPU Frequency      : 3194 MHz
+# CPU Physical cores : 8
+# CPU Logical cores  : 16
+# Host memory        : 16539 MB
+# Swap memory        : 1744 MB
+# Total Virtual      : 18284 MB
+# Available Virtual  : 8653 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/Levi/Downloads/wetransfer_keyboard_2026-03-06_1857/keyboard/keyboard.xpr
+update_compile_order -fileset sources_1
+update_compile_order -fileset sources_1
+add_files -norecurse -scan_for_includes {C:/Users/Levi/Downloads/ps2_lcd_toplevel.vhd C:/Users/Levi/Downloads/Picoblaze_6/Picoblaze_6/kcpsm6.vhd}
+import_files -norecurse {C:/Users/Levi/Downloads/ps2_lcd_toplevel.vhd C:/Users/Levi/Downloads/Picoblaze_6/Picoblaze_6/kcpsm6.vhd}
+update_compile_order -fileset sources_1
+reset_run synth_1
+launch_runs synth_1 -jobs 16
+wait_on_run synth_1
+export_ip_user_files -of_objects  [get_files C:/Users/Levi/Downloads/wetransfer_keyboard_2026-03-06_1857/kcpsmcpu/ps2_lcd_toplevel.vhd] -no_script -reset -force -quiet
+remove_files  C:/Users/Levi/Downloads/wetransfer_keyboard_2026-03-06_1857/kcpsmcpu/ps2_lcd_toplevel.vhd
+export_ip_user_files -of_objects  [get_files C:/Users/Levi/Downloads/wetransfer_keyboard_2026-03-06_1857/kcpsmcpu/kcpsm6.vhd] -no_script -reset -force -quiet
+remove_files  C:/Users/Levi/Downloads/wetransfer_keyboard_2026-03-06_1857/kcpsmcpu/kcpsm6.vhd
+reset_run synth_1
+launch_runs synth_1 -jobs 16
+launch_runs synth_1 -jobs 16
+wait_on_run synth_1
+launch_runs impl_1 -jobs 16
+wait_on_run impl_1
+reset_run impl_1
+launch_runs impl_1 -jobs 16
+wait_on_run impl_1
+update_compile_order -fileset sources_1
+reset_run synth_1
+launch_runs impl_1 -jobs 16
+wait_on_run impl_1
+open_run impl_1
+launch_runs impl_1 -to_step write_bitstream -jobs 16
+wait_on_run impl_1
+open_hw_manager

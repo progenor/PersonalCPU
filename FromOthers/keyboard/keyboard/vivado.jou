@@ -1,0 +1,26 @@
+#-----------------------------------------------------------
+# Vivado v2025.2 (64-bit)
+# SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
+# IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
+# SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
+# Start of session at: Sat Mar  7 17:17:07 2026
+# Process ID         : 240
+# Current directory  : C:/Users/Levi/Downloads/Periferiak/keyboard
+# Command line       : vivado.exe -gui_launcher_event rodinguilauncherevent21816 C:\Users\Levi\Downloads\Periferiak\keyboard\keyboard.xpr
+# Log file           : C:/Users/Levi/Downloads/Periferiak/keyboard/vivado.log
+# Journal file       : C:/Users/Levi/Downloads/Periferiak/keyboard\vivado.jou
+# Running On         : Levi
+# Platform           : Windows Server 2016 or Windows 10
+# Operating System   : 26200
+# Processor Detail   : AMD Ryzen 7 5800H with Radeon Graphics         
+# CPU Frequency      : 3194 MHz
+# CPU Physical cores : 8
+# CPU Logical cores  : 16
+# Host memory        : 16539 MB
+# Swap memory        : 1744 MB
+# Total Virtual      : 18284 MB
+# Available Virtual  : 9267 MB
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/Levi/Downloads/Periferiak/keyboard/keyboard.xpr
+update_compile_order -fileset sources_1

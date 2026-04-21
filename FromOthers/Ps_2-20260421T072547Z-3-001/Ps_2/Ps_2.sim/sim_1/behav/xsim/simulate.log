@@ -1,0 +1,4 @@
+Time resolution is 1 ps
+Note: ===== TESZT 1: 'A' lenyomas =====
+Time: 5000100 ns  Iteration: 0  Process: /tb_toplevel/stim_proc  File: C:/VivaldoFeladatok/Szamtek_III_ev/Ps_2/Ps_2.srcs/sim_1/imports/new/Ps2_Simulation.vhd
+INFO: xsimkernel Simulation Memory Usage: 21696 KB (Peak: 21696 KB), Simulation CPU Usage: 289437 ms
