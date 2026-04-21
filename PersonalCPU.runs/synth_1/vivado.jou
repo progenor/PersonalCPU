@@ -3,8 +3,8 @@
 # SW Build 6299465 on Fri Nov 14 19:35:11 GMT 2025
 # IP Build 6300035 on Fri Nov 14 10:48:45 MST 2025
 # SharedData Build 6298862 on Thu Nov 13 04:50:51 MST 2025
-# Start of session at: Tue Apr 21 11:14:55 2026
-# Process ID         : 23092
+# Start of session at: Tue Apr 21 11:38:15 2026
+# Process ID         : 11920
 # Current directory  : C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.runs/synth_1
 # Command line       : vivado.exe -log toplevel.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source toplevel.tcl
 # Log file           : C:/Users/wqewqe/School/PersonalCPU/PersonalCPU.runs/synth_1/toplevel.vds
@@ -19,6 +19,6 @@
 # Host memory        : 34227 MB
 # Swap memory        : 2147 MB
 # Total Virtual      : 36375 MB
-# Available Virtual  : 14629 MB
+# Available Virtual  : 13466 MB
 #-----------------------------------------------------------
 source toplevel.tcl -notrace

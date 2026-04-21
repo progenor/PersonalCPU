@@ -1,0 +1,242 @@
+;===============================================================================
+; LCD Routines for PersonalCPU
+; Standard HD44780 16x2 LCD Interface
+;
+; Port Assignments:
+;   Port 0x02: LCD Command (Rs=0)
+;   Port 0x03: LCD Data (Rs=1)
+;
+; All delays are software-based for 125 MHz system clock
+;===============================================================================
+
+;===============================================================================
+; LCD_Init: Initialize LCD for 8-bit mode, 2 lines, 5x8 font
+;===============================================================================
+lcd_init:
+    ; Function Set: 0x38 = 8-bit, 2-line, 5x8 font
+    load s0, 0x38
+    output s0, 0x02         ; Write command
+    call delay_1p6ms
+    
+    ; Display Control: 0x0E = Display ON, Cursor ON, Blink OFF
+    load s0, 0x0E
+    output s0, 0x02
+    call delay_1p6ms
+    
+    ; Clear Display: 0x01
+    load s0, 0x01
+    output s0, 0x02
+    call delay_1p6ms
+    
+    ; Entry Mode: 0x06 = Increment cursor, no shift
+    load s0, 0x06
+    output s0, 0x02
+    call delay_1p6ms
+    
+    return
+
+;===============================================================================
+; LCD_Clear: Clear display and return cursor to home
+;===============================================================================
+lcd_clear:
+    load s0, 0x01           ; Clear display command
+    output s0, 0x02
+    call delay_1p6ms
+    return
+
+;===============================================================================
+; LCD_Home: Return cursor to HOME position (0x00)
+;===============================================================================
+lcd_home:
+    load s0, 0x02           ; Home command
+    output s0, 0x02
+    call delay_1p6ms
+    return
+
+;===============================================================================
+; LCD_Goto_Line2: Move cursor to start of line 2 (address 0x40)
+;===============================================================================
+lcd_goto_line2:
+    load s0, 0xC0           ; DDRAM address 0x40 (line 2 start)
+    output s0, 0x02
+    call delay_1p6ms
+    return
+
+;===============================================================================
+; LCD_Write_Char: Write character in sX to LCD
+; Input: sX = ASCII character code
+;===============================================================================
+lcd_write_char:
+    ; sX contains the character
+    output sX, 0x03         ; Write as data (Rs=1)
+    call delay_40us
+    return
+
+;===============================================================================
+; Scancode to ASCII Lookup Table
+; Maps PS/2 scancodes (make codes) to ASCII characters
+; Only includes 0-9, A-F as per Diakoknak requirements
+;
+; Lookup: Call with scancode in s0, returns ASCII in s0
+; If not found, s0 = 0x00 (null)
+;===============================================================================
+scancode_to_ascii:
+    ; Input: s0 = scancode
+    ; Output: s0 = ASCII (or 0x00 if not found)
+    
+    ; 0x45 -> '0'
+    load s7, 0x45
+    compare s0, s7
+    jump nz, check_1
+    load s0, 0x30           ; ASCII '0'
+    return
+    
+check_1:
+    ; 0x16 -> '1'
+    load s7, 0x16
+    compare s0, s7
+    jump nz, check_2
+    load s0, 0x31           ; ASCII '1'
+    return
+    
+check_2:
+    ; 0x1E -> '2'
+    load s7, 0x1E
+    compare s0, s7
+    jump nz, check_3
+    load s0, 0x32           ; ASCII '2'
+    return
+    
+check_3:
+    ; 0x26 -> '3'
+    load s7, 0x26
+    compare s0, s7
+    jump nz, check_4
+    load s0, 0x33           ; ASCII '3'
+    return
+    
+check_4:
+    ; 0x25 -> '4'
+    load s7, 0x25
+    compare s0, s7
+    jump nz, check_5
+    load s0, 0x34           ; ASCII '4'
+    return
+    
+check_5:
+    ; 0x2E -> '5'
+    load s7, 0x2E
+    compare s0, s7
+    jump nz, check_6
+    load s0, 0x35           ; ASCII '5'
+    return
+    
+check_6:
+    ; 0x36 -> '6'
+    load s7, 0x36
+    compare s0, s7
+    jump nz, check_7
+    load s0, 0x36           ; ASCII '6'
+    return
+    
+check_7:
+    ; 0x3D -> '7'
+    load s7, 0x3D
+    compare s0, s7
+    jump nz, check_8
+    load s0, 0x37           ; ASCII '7'
+    return
+    
+check_8:
+    ; 0x3E -> '8'
+    load s7, 0x3E
+    compare s0, s7
+    jump nz, check_9
+    load s0, 0x38           ; ASCII '8'
+    return
+    
+check_9:
+    ; 0x46 -> '9'
+    load s7, 0x46
+    compare s0, s7
+    jump nz, check_a
+    load s0, 0x39           ; ASCII '9'
+    return
+    
+check_a:
+    ; 0x1C -> 'A'
+    load s7, 0x1C
+    compare s0, s7
+    jump nz, check_b
+    load s0, 0x41           ; ASCII 'A'
+    return
+    
+check_b:
+    ; 0x32 -> 'B'
+    load s7, 0x32
+    compare s0, s7
+    jump nz, check_c
+    load s0, 0x42           ; ASCII 'B'
+    return
+    
+check_c:
+    ; 0x21 -> 'C'
+    load s7, 0x21
+    compare s0, s7
+    jump nz, check_d
+    load s0, 0x43           ; ASCII 'C'
+    return
+    
+check_d:
+    ; 0x23 -> 'D'
+    load s7, 0x23
+    compare s0, s7
+    jump nz, check_e
+    load s0, 0x44           ; ASCII 'D'
+    return
+    
+check_e:
+    ; 0x24 -> 'E'
+    load s7, 0x24
+    compare s0, s7
+    jump nz, check_f
+    load s0, 0x45           ; ASCII 'E'
+    return
+    
+check_f:
+    ; 0x2B -> 'F'
+    load s7, 0x2B
+    compare s0, s7
+    jump nz, not_found
+    load s0, 0x46           ; ASCII 'F'
+    return
+    
+not_found:
+    load s0, 0x00           ; Return null for unmapped scancodes
+    return
+
+;===============================================================================
+; delay_1p6ms: Delay approximately 1.6 milliseconds
+; At 125 MHz: 125,000 cycles/ms = ~200 cycles per iteration
+;===============================================================================
+delay_1p6ms:
+    load s6, 190            ; ~200 iterations = 1.6ms
+delay_1p6ms_loop:
+    sub s6, 1
+    jump nz, delay_1p6ms_loop
+    return
+
+;===============================================================================
+; delay_40us: Delay approximately 40 microseconds
+; Used after each LCD write
+;===============================================================================
+delay_40us:
+    load s6, 5              ; ~5 iterations = 40us
+delay_40us_loop:
+    sub s6, 1
+    jump nz, delay_40us_loop
+    return
+
+;===============================================================================
+; End of LCD Routines
+;===============================================================================

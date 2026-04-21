@@ -1,12 +1,14 @@
 ;===============================================================================
 ; PS/2 Keyboard Interrupt Handler and Scancode Capture Routine
 ; 
-; PersonalCPU PS/2 Integration
+; PersonalCPU PS/2 Integration with LCD Display
 ; Assembly code for capturing raw PS/2 keyboard scancodes via interrupt
+; and displaying them on LCD
 ;
 ; Port Assignments:
-;   Port 0x00: PS/2 Clock and Data (bit 7 = PS2_DATA, bit 6-0 = reserved/unused)
 ;   Port 0x01: PS/2 Data Read (bit 0 = ps2_data_clean from PS2_Controller)
+;   Port 0x02: LCD Command (Rs=0)
+;   Port 0x03: LCD Data (Rs=1)
 ;   Port 0x05: Button/Switch Input
 ;   Port 0x06: LED Output
 ;
@@ -21,6 +23,9 @@
 ;   0x20-0x3F: Circular scancode buffer (32 bytes)
 ;
 ;===============================================================================
+
+; Include LCD routines
+#include "lcd_routines.psm"
 
 ; Scancodes for testing
 #define SCANCODE_A          0x1C
@@ -51,6 +56,32 @@ main_program:
     
     load s0, 00              ; Clear buffer read pointer
     store s0, 05
+    
+    ; Initialize LCD
+    call lcd_init
+    
+    ; Display welcome message "PS2+LCD"
+    ; P
+    load s0, 0x50
+    call lcd_write_char
+    ; S
+    load s0, 0x53
+    call lcd_write_char
+    ; 2
+    load s0, 0x32
+    call lcd_write_char
+    ; +
+    load s0, 0x2B
+    call lcd_write_char
+    ; L
+    load s0, 0x4C
+    call lcd_write_char
+    ; C
+    load s0, 0x43
+    call lcd_write_char
+    ; D
+    load s0, 0x44
+    call lcd_write_char
 
 main_loop:
     ; Check if scancode is ready in buffer
@@ -59,7 +90,8 @@ main_loop:
     
     jump nz, process_scancode
     
-    ; LED heartbeat or idle pattern
+    ; LED heartbeat
+    load s0, 0x00
     output s0, 06            ; Output to LEDs for debugging
     
     jump main_loop
@@ -73,17 +105,31 @@ process_scancode:
     jump z, skip_read        ; If pointers equal, no data
     
     ; Read scancode from buffer
-    load s3, PS2_BUFFER_START  ; Load buffer start address
-    add s3, s2               ; Add read pointer offset
-    fetch s4, s3             ; Get scancode from buffer
+    load s3, PS2_BUFFER_START
+    add s3, s2
+    fetch s0, s3             ; Get scancode in s0
     
     ; Output scancode to LEDs
-    output s4, 06
+    output s0, 0x06
     
+    ; Convert scancode to ASCII
+    call scancode_to_ascii
+    ; Result in s0
+    
+    ; Only display if not null
+    load s7, 0x00
+    compare s0, s7
+    jump z, skip_lcd_write
+    
+    ; Write character to LCD
+    call lcd_write_char      ; Expects character in sX (which is s0)
+    
+skip_lcd_write:
     ; Increment read pointer with wraparound
+    fetch s2, 05
     add s2, 01
-    and s2, 0x1F             ; Wrap around at 32
-    store s2, 05             ; Update read pointer
+    and s2, 0x1F
+    store s2, 05
     
     jump main_loop
 

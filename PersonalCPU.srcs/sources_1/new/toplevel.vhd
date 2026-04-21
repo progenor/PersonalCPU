@@ -38,7 +38,12 @@ entity toplevel is
            led : out STD_LOGIC_VECTOR (3 downto 0);
            reset : in STD_LOGIC;
            psclock : in STD_LOGIC;                     -- PS/2 keyboard clock (T11)
-           psdata : in STD_LOGIC);                     -- PS/2 keyboard data (W14)
+           psdata : in STD_LOGIC;                      -- PS/2 keyboard data (W14)
+           -- LCD Interface
+           Db : out STD_LOGIC_VECTOR(7 downto 0);     -- LCD data bus (PmodA Y18-W19)
+           Rs : out STD_LOGIC;                         -- Register select (V16)
+           Rw : out STD_LOGIC;                         -- Read/Write (W16)
+           E : out STD_LOGIC);                         -- Enable (V12)
 end toplevel;
 
 architecture Behavioral of toplevel is
@@ -69,6 +74,21 @@ end component;
     );
   end component;
   
+  component LCD_Controller is
+    Port (
+        clk : in STD_LOGIC;
+        reset : in STD_LOGIC;
+        write_en : in STD_LOGIC;
+        rs_flag : in STD_LOGIC;
+        data_in : in STD_LOGIC_VECTOR(7 downto 0);
+        lcd_data : out STD_LOGIC_VECTOR(7 downto 0);
+        lcd_rs : out STD_LOGIC;
+        lcd_rw : out STD_LOGIC;
+        lcd_e : out STD_LOGIC;
+        busy : out STD_LOGIC
+    );
+  end component;
+  
   component memoria is
   generic(             C_FAMILY : string := "7S"; 
               C_RAM_SIZE_KWORDS : integer := 2;
@@ -94,6 +114,12 @@ end component;
   signal ps2_clk_clean : std_logic;
   signal ps2_data_clean : std_logic;
   signal ps2_interrupt_req : std_logic;
+  
+  -- LCD controller signals
+  signal lcd_write_en : std_logic;
+  signal lcd_rs_flag : std_logic;
+  signal lcd_data_out : std_logic_vector(7 downto 0);
+  signal lcd_busy : std_logic;
 
 begin
 
@@ -118,6 +144,25 @@ elsif rdstr='1' and portid=x"01" then
      inport<="000000000000000"&ps2_data_clean;
 end if;
 end if;
+end process;
+
+-- LCD Port Mux (Port 0x02 = command, Port 0x03 = data)
+process(clk, wrstr, portid)
+begin
+    if clk'event and clk='1' then
+        lcd_write_en <= '0';
+        if wrstr='1' then
+            if portid=x"02" then        -- LCD command (Rs=0)
+                lcd_data_out <= outport(7 downto 0);
+                lcd_rs_flag <= '0';
+                lcd_write_en <= '1';
+            elsif portid=x"03" then     -- LCD data (Rs=1)
+                lcd_data_out <= outport(7 downto 0);
+                lcd_rs_flag <= '1';
+                lcd_write_en <= '1';
+            end if;
+        end if;
+    end if;
 end process;
 
 
@@ -146,6 +191,21 @@ port map (
          ps2_clk_clean =>  ps2_clk_clean,
          ps2_data_clean =>  ps2_data_clean,
          interrupt_req =>  ps2_interrupt_req
+);
+
+-- LCD Controller Instantiation
+lcd_ctrl : LCD_Controller
+port map (
+         clk => clk,
+         reset => reset,
+         write_en => lcd_write_en,
+         rs_flag => lcd_rs_flag,
+         data_in => lcd_data_out,
+         lcd_data => Db,
+         lcd_rs => Rs,
+         lcd_rw => Rw,
+         lcd_e => E,
+         busy => lcd_busy
 );
 
  mem: memoria
