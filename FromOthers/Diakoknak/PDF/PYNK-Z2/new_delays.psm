@@ -1,0 +1,43 @@
+del_10ms:       LOAD    sC, 32
+del_10mslp:
+                CALL    del_200us
+                SUB     sC, 01
+                JUMP    NZ, del_10mslp
+                RETURN
+				
+del_1520us:		LOAD sC,08
+del_1520uslp:	
+				CALL del_200us
+				SUB sC, 01
+				JUMP    NZ, del_1520uslp
+                RETURN
+				
+				
+del_200us:      LOAD    sB, C8
+del_200uslp:
+                CALL    del_1us
+                SUB     sB, 01
+                JUMP    NZ, del_200uslp
+                RETURN				
+				
+				
+				
+				
+del_37us:       LOAD    sB, 25
+del_37uslp:
+                CALL    del_1us
+                SUB     sB, 01
+                JUMP    NZ, del_37uslp
+                RETURN
+
+
+del_1us:        LOAD      sA, 0B
+del_1uslp:      SUB       sA, 01
+                JUMP      NZ, del_1uslp
+                RETURN
+
+del_220ns:      LOAD      sA, 03
+                SUB       sA, 01
+                SUB       sA, 01
+                SUB       sA, 01
+                RETURN	
