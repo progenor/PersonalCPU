@@ -1,0 +1,459 @@
+; ============================================================================
+; PS2 Keyboard + LCD Display + UART for PersonalCPU
+; Adapted for PersonalCPU Port I/O Mapping
+; ============================================================================
+; Port Mapping:
+;   0x01: PS/2 data read (bit 0 = PS2 data)
+;   0x02: LCD command write (Rs=0)
+;   0x03: LCD data write (Rs=1)
+;   0x04: UART Tx data write
+;   0x05: Button input
+;   0x06: LED output
+;   0x07: UART status (bit 0=rx_present, bit 1=tx_full)
+; ============================================================================
+
+; ===== REGISTER NAMES =====
+NAMEREG s0, bitcnt           ; PS/2 bit counter
+NAMEREG s1, datareg          ; PS/2 shift register low byte
+NAMEREG s2, datareg_h        ; PS/2 shift register high byte
+NAMEREG s3, scancode         ; Final scancode from PS/2
+NAMEREG s4, CharCode         ; ASCII character code
+NAMEREG s5, breakflag        ; Break/release flag
+NAMEREG s6, char_ready       ; Character ready flag
+NAMEREG s7, delay1           ; Delay counter 1
+NAMEREG s8, delay2           ; Delay counter 2
+NAMEREG s9, delay3           ; Delay counter 3
+NAMEREG sA, lcd_temp         ; LCD temp data
+NAMEREG sB, cursor_pos       ; LCD cursor position
+NAMEREG sC, uart_status      ; UART status
+
+; ===== INITIALIZATION =====
+            LOAD bitcnt, 00
+            LOAD datareg, 00
+            LOAD datareg_h, 00
+            LOAD breakflag, 00
+            LOAD char_ready, 00
+            LOAD cursor_pos, 00      ; Cursor starts at row 1, col 1
+
+            CALL lcd_init            ; Initialize LCD
+            ENABLE INTERRUPT         ; Enable PS/2 interrupt
+
+
+; ===== MAIN LOOP =====
+main_loop:
+            ; --- Check for PS/2 character ready ---
+            COMPARE char_ready, 01
+            JUMP Z, check_uart
+            
+            ; Clear PS/2 ready flag
+            LOAD char_ready, 00
+            JUMP process_char
+
+check_uart:
+            ; --- Check for UART Rx data ---
+            INPUT uart_status, 07    ; Read UART status (Port 0x07)
+            AND delay1, uart_status, 01   ; Check bit 0: rx_data_present
+            JUMP Z, main_loop        ; No data, go back to start
+            
+            ; Read UART Rx data
+            INPUT CharCode, 07       ; Read from Port 0x07 (Rx data when read)
+            
+process_char:
+            ; --- Handle Escape (clear screen) ---
+            COMPARE CharCode, 1B
+            JUMP Z, handle_esc
+            
+            ; --- Handle Enter (newline) ---
+            COMPARE CharCode, 0D
+            JUMP Z, handle_enter
+            
+            ; --- Handle Backspace ---
+            COMPARE CharCode, 08
+            JUMP Z, handle_bs
+            
+            ; --- Normal character write ---
+            LOAD lcd_temp, CharCode
+            CALL lcd_write_data
+            
+            ; Increment cursor position
+            ADD cursor_pos, 01
+            
+            ; --- Check line wrap (16 chars per line) ---
+            COMPARE cursor_pos, 10
+            JUMP NZ, check_end_screen
+            LOAD cursor_pos, 40      ; Move to row 2
+            LOAD lcd_temp, C0        ; Set DDRAM to 0x40 (row 2)
+            CALL lcd_write_cmd
+            JUMP uart_echo
+            
+check_end_screen:
+            ; Check if at end of screen (row 2, col 16)
+            COMPARE cursor_pos, 50
+            JUMP NZ, uart_echo
+            LOAD cursor_pos, 00      ; Wrap to row 1
+            LOAD lcd_temp, 80        ; Set DDRAM to 0x00 (row 1)
+            CALL lcd_write_cmd
+
+uart_echo:
+            ; --- Echo character to UART Tx ---
+            CALL uart_transmit
+            JUMP main_loop
+
+; --- ESCAPE: Clear screen ---
+handle_esc:
+            LOAD lcd_temp, 01        ; Clear display command
+            CALL lcd_write_cmd
+            CALL delay_2ms           ; Wait for clear
+            LOAD cursor_pos, 00      ; Reset cursor
+            JUMP uart_echo
+
+; --- ENTER: Move to next line ---
+handle_enter:
+            COMPARE cursor_pos, 40
+            JUMP C, enter_to_line2   ; If < 0x40 (row 1), go to row 2
+            
+            ; Already on row 2, wrap to row 1
+            LOAD cursor_pos, 00
+            LOAD lcd_temp, 80
+            CALL lcd_write_cmd
+            JUMP uart_echo
+            
+enter_to_line2:
+            LOAD cursor_pos, 40
+            LOAD lcd_temp, C0
+            CALL lcd_write_cmd
+            JUMP uart_echo
+
+; --- BACKSPACE: Delete character ---
+handle_bs:
+            COMPARE cursor_pos, 00
+            JUMP Z, uart_echo        ; At line start, do nothing
+            
+            COMPARE cursor_pos, 40
+            JUMP NZ, normal_bs
+            ; At row 2 start, move to row 1 end
+            LOAD cursor_pos, 0F
+            JUMP apply_bs
+            
+normal_bs:
+            SUB cursor_pos, 01
+            
+apply_bs:
+            ; Set cursor to previous position
+            LOAD lcd_temp, 80
+            ADD lcd_temp, cursor_pos
+            CALL lcd_write_cmd
+            
+            ; Write space to erase character
+            LOAD lcd_temp, 20
+            CALL lcd_write_data
+            
+            ; Move cursor back
+            LOAD lcd_temp, 80
+            ADD lcd_temp, cursor_pos
+            CALL lcd_write_cmd
+            JUMP uart_echo
+
+
+; ===== LCD SUBROUTINES =====
+lcd_init:
+            CALL delay_20ms
+            LOAD lcd_temp, 38       ; 8-bit, 2-line, 5x8 font
+            CALL lcd_write_cmd
+            CALL delay_37us
+            LOAD lcd_temp, 0F       ; Display ON, Cursor ON, Blink ON
+            CALL lcd_write_cmd
+            CALL delay_37us
+            LOAD lcd_temp, 01       ; Clear display
+            CALL lcd_write_cmd
+            CALL delay_2ms
+            RETURN
+
+; Write LCD command (Rs=0)
+lcd_write_cmd:
+            OUTPUT lcd_temp, 02     ; Write to Port 0x02 (command)
+            CALL delay_37us
+            RETURN
+
+; Write LCD data (Rs=1)
+lcd_write_data:
+            OUTPUT lcd_temp, 03     ; Write to Port 0x03 (data)
+            CALL delay_37us
+            RETURN
+
+
+; ===== UART SUBROUTINE =====
+uart_transmit:
+            INPUT uart_status, 07   ; Read UART status
+            AND delay1, uart_status, 02   ; Check bit 1: tx_full
+            JUMP NZ, uart_transmit  ; If full, wait
+            
+            OUTPUT CharCode, 04     ; Write to Port 0x04 (Tx data)
+            RETURN
+
+
+; ===== DELAY SUBROUTINES =====
+delay_37us:
+            LOAD delay1, 00
+            LOAD delay2, 05
+d37_loop:   SUB delay1, 01
+            SUBCY delay2, 00
+            JUMP NZ, d37_loop
+            RETURN
+
+delay_2ms:
+            LOAD delay1, 00
+            LOAD delay2, C0
+d2ms_loop:  SUB delay1, 01
+            SUBCY delay2, 00
+            JUMP NZ, d2ms_loop
+            RETURN
+
+delay_20ms:
+            LOAD delay1, B4
+            LOAD delay2, C4
+            LOAD delay3, 04
+d20ms_loop: SUB delay1, 01
+            SUBCY delay2, 00
+            SUBCY delay3, 00
+            JUMP NZ, d20ms_loop
+            RETURN
+
+
+; ===== PS/2 INTERRUPT HANDLER (ISR at 0x3FF) =====
+int_handler:
+            INPUT s2, 01             ; Read PS/2 data bit from Port 0x01
+            COMPARE bitcnt, 00
+            JUMP Z, skip_bit
+            
+            COMPARE bitcnt, 09
+            JUMP Z, skip_bit
+            
+            COMPARE bitcnt, 0A
+            JUMP Z, int_stop
+
+int_data:
+            SR0 datareg              ; Shift right with carry (LSB first)
+            COMPARE s2, 80           ; Check if bit set
+            JUMP NZ, skip_bit
+            OR datareg, 80           ; Set MSB if bit is 1
+
+skip_bit:
+            ADD bitcnt, 01
+            RETURNI ENABLE
+
+int_stop:
+            LOAD scancode, datareg
+            COMPARE scancode, F0     ; Break code?
+            JUMP Z, set_break
+            
+            COMPARE breakflag, 01    ; Is this a key release?
+            JUMP Z, key_release
+            
+            ; Convert scancode to ASCII
+            LOAD CharCode, 00
+            CALL sc_to_ascii
+            
+            ; Only set ready flag if valid ASCII
+            COMPARE CharCode, 00
+            JUMP Z, end_int
+            
+            LOAD char_ready, 01
+            JUMP end_int
+
+set_break:
+            LOAD breakflag, 01
+            JUMP end_int
+
+key_release:
+            LOAD breakflag, 00
+            JUMP end_int
+
+end_int:
+            LOAD bitcnt, 00
+            RETURNI ENABLE
+
+
+; ===== SCANCODE TO ASCII CONVERSION =====
+sc_to_ascii:
+            ; Numbers 0-9
+            COMPARE scancode, 45
+            JUMP Z, char_0
+            COMPARE scancode, 16
+            JUMP Z, char_1
+            COMPARE scancode, 1E
+            JUMP Z, char_2
+            COMPARE scancode, 26
+            JUMP Z, char_3
+            COMPARE scancode, 25
+            JUMP Z, char_4
+            COMPARE scancode, 2E
+            JUMP Z, char_5
+            COMPARE scancode, 36
+            JUMP Z, char_6
+            COMPARE scancode, 3D
+            JUMP Z, char_7
+            COMPARE scancode, 3E
+            JUMP Z, char_8
+            COMPARE scancode, 46
+            JUMP Z, char_9
+            
+            ; Letters A-Z
+            COMPARE scancode, 1C
+            JUMP Z, char_A
+            COMPARE scancode, 32
+            JUMP Z, char_B
+            COMPARE scancode, 21
+            JUMP Z, char_C
+            COMPARE scancode, 23
+            JUMP Z, char_D
+            COMPARE scancode, 24
+            JUMP Z, char_E
+            COMPARE scancode, 2B
+            JUMP Z, char_F
+            COMPARE scancode, 34
+            JUMP Z, char_G
+            COMPARE scancode, 33
+            JUMP Z, char_H
+            COMPARE scancode, 43
+            JUMP Z, char_I
+            COMPARE scancode, 3B
+            JUMP Z, char_J
+            COMPARE scancode, 42
+            JUMP Z, char_K
+            COMPARE scancode, 4B
+            JUMP Z, char_L
+            COMPARE scancode, 3A
+            JUMP Z, char_M
+            COMPARE scancode, 31
+            JUMP Z, char_N
+            COMPARE scancode, 44
+            JUMP Z, char_O
+            COMPARE scancode, 4D
+            JUMP Z, char_P
+            COMPARE scancode, 15
+            JUMP Z, char_Q
+            COMPARE scancode, 2D
+            JUMP Z, char_R
+            COMPARE scancode, 1B
+            JUMP Z, char_S
+            COMPARE scancode, 2C
+            JUMP Z, char_T
+            COMPARE scancode, 3C
+            JUMP Z, char_U
+            COMPARE scancode, 2A
+            JUMP Z, char_V
+            COMPARE scancode, 1D
+            JUMP Z, char_W
+            COMPARE scancode, 22
+            JUMP Z, char_X
+            COMPARE scancode, 35
+            JUMP Z, char_Y
+            COMPARE scancode, 1A
+            JUMP Z, char_Z
+            
+            ; Special keys
+            COMPARE scancode, 29
+            JUMP Z, char_space
+            COMPARE scancode, 66
+            JUMP Z, char_bs
+            COMPARE scancode, 5A
+            JUMP Z, char_enter
+            COMPARE scancode, 76
+            JUMP Z, char_esc
+            
+            RETURN
+
+; Number characters
+char_0: LOAD CharCode, 30
+        RETURN
+char_1: LOAD CharCode, 31
+        RETURN
+char_2: LOAD CharCode, 32
+        RETURN
+char_3: LOAD CharCode, 33
+        RETURN
+char_4: LOAD CharCode, 34
+        RETURN
+char_5: LOAD CharCode, 35
+        RETURN
+char_6: LOAD CharCode, 36
+        RETURN
+char_7: LOAD CharCode, 37
+        RETURN
+char_8: LOAD CharCode, 38
+        RETURN
+char_9: LOAD CharCode, 39
+        RETURN
+
+; Letter characters (lowercase)
+char_A: LOAD CharCode, 61
+        RETURN
+char_B: LOAD CharCode, 62
+        RETURN
+char_C: LOAD CharCode, 63
+        RETURN
+char_D: LOAD CharCode, 64
+        RETURN
+char_E: LOAD CharCode, 65
+        RETURN
+char_F: LOAD CharCode, 66
+        RETURN
+char_G: LOAD CharCode, 67
+        RETURN
+char_H: LOAD CharCode, 68
+        RETURN
+char_I: LOAD CharCode, 69
+        RETURN
+char_J: LOAD CharCode, 6A
+        RETURN
+char_K: LOAD CharCode, 6B
+        RETURN
+char_L: LOAD CharCode, 6C
+        RETURN
+char_M: LOAD CharCode, 6D
+        RETURN
+char_N: LOAD CharCode, 6E
+        RETURN
+char_O: LOAD CharCode, 6F
+        RETURN
+char_P: LOAD CharCode, 70
+        RETURN
+char_Q: LOAD CharCode, 71
+        RETURN
+char_R: LOAD CharCode, 72
+        RETURN
+char_S: LOAD CharCode, 73
+        RETURN
+char_T: LOAD CharCode, 74
+        RETURN
+char_U: LOAD CharCode, 75
+        RETURN
+char_V: LOAD CharCode, 76
+        RETURN
+char_W: LOAD CharCode, 77
+        RETURN
+char_X: LOAD CharCode, 78
+        RETURN
+char_Y: LOAD CharCode, 79
+        RETURN
+char_Z: LOAD CharCode, 7A
+        RETURN
+
+; Special characters
+char_space:
+        LOAD CharCode, 20
+        RETURN
+char_bs:
+        LOAD CharCode, 08
+        RETURN
+char_enter:
+        LOAD CharCode, 0D
+        RETURN
+char_esc:
+        LOAD CharCode, 1B
+        RETURN
+
+; ===== INTERRUPT VECTOR =====
+            ADDRESS 3FF
+            JUMP int_handler

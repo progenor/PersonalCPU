@@ -45,3 +45,7 @@ set_property src_info {type:XDC file:1 line:37 export:INPUT save:INPUT read:READ
 set_property -dict { PACKAGE_PIN W16   IOSTANDARD LVCMOS33 } [get_ports { Rw }]; #IO_L18N_T2_34 Sch=jb_n[3] LCD_RW
 set_property src_info {type:XDC file:1 line:38 export:INPUT save:INPUT read:READ} [current_design]
 set_property -dict { PACKAGE_PIN V12   IOSTANDARD LVCMOS33 } [get_ports { E }];  #IO_L4P_T0_34 Sch=jb_p[4] LCD_E
+set_property src_info {type:XDC file:1 line:41 export:INPUT save:INPUT read:READ} [current_design]
+set_property -dict { PACKAGE_PIN J19   IOSTANDARD LVCMOS33 } [get_ports { uart_tx }]; #IO_L6P_T0_34 Sch=jc_p[1] UART_TX
+set_property src_info {type:XDC file:1 line:42 export:INPUT save:INPUT read:READ} [current_design]
+set_property -dict { PACKAGE_PIN J18   IOSTANDARD LVCMOS33 } [get_ports { uart_rx }]; #IO_L6N_T0_VREF_34 Sch=jc_n[1] UART_RX

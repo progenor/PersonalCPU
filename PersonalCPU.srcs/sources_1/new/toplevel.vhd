@@ -43,7 +43,10 @@ entity toplevel is
            Db : out STD_LOGIC_VECTOR(7 downto 0);     -- LCD data bus (PmodA Y18-W19)
            Rs : out STD_LOGIC;                         -- Register select (V16)
            Rw : out STD_LOGIC;                         -- Read/Write (W16)
-           E : out STD_LOGIC);                         -- Enable (V12)
+           E : out STD_LOGIC;                          -- Enable (V12)
+           -- UART Interface
+           uart_tx : out STD_LOGIC;                    -- UART transmit
+           uart_rx : in STD_LOGIC);                    -- UART receive
 end toplevel;
 
 architecture Behavioral of toplevel is
@@ -89,6 +92,26 @@ end component;
     );
   end component;
   
+  component UART_BaudRate_Gen is
+    Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           en_16_x_baud : out STD_LOGIC);
+  end component;
+  
+  component UART_Controller is
+    Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           en_16_x_baud : in STD_LOGIC;
+           tx_data : in STD_LOGIC_VECTOR(7 downto 0);
+           tx_write : in STD_LOGIC;
+           rx_data : out STD_LOGIC_VECTOR(7 downto 0);
+           rx_read : in STD_LOGIC;
+           uart_tx : out STD_LOGIC;
+           uart_rx : in STD_LOGIC;
+           rx_data_present : out STD_LOGIC;
+           tx_full : out STD_LOGIC);
+  end component;
+  
   component memoria is
   generic(             C_FAMILY : string := "7S"; 
               C_RAM_SIZE_KWORDS : integer := 2;
@@ -120,6 +143,15 @@ end component;
   signal lcd_rs_flag : std_logic;
   signal lcd_data_out : std_logic_vector(7 downto 0);
   signal lcd_busy : std_logic;
+  
+  -- UART signals
+  signal en_16_x_baud : std_logic;
+  signal uart_tx_data : std_logic_vector(7 downto 0);
+  signal uart_tx_write : std_logic;
+  signal uart_rx_data : std_logic_vector(7 downto 0);
+  signal uart_rx_read : std_logic;
+  signal uart_rx_data_present : std_logic;
+  signal uart_tx_full : std_logic;
 
 begin
 
@@ -128,6 +160,12 @@ begin
 if clk'event and clk='1' then
 if wrstr='1' and portid=x"06" then
     led<=outport(3 downto 0);
+elsif wrstr='1' and portid=x"04" then
+    -- UART Tx data write
+    uart_tx_data <= outport(7 downto 0);
+    uart_tx_write <= '1';
+else
+    uart_tx_write <= '0';
 end if;
 end if;
 end process;
@@ -142,6 +180,13 @@ elsif rdstr='1' and portid=x"01" then
      -- PS/2 data read at port 0x01
      -- PS/2 data bit packed at bit 7, rest zeros
      inport<="000000000000000"&ps2_data_clean;
+elsif rdstr='1' and portid=x"07" then
+     -- UART Rx status at port 0x07
+     -- bit 0: rx_data_present, bit 1: tx_full
+     inport<="00000000000000"&uart_tx_full&uart_rx_data_present;
+elsif rdstr='1' and portid=x"04" then
+     -- UART Rx data at port 0x04
+     inport<="00000000"&uart_rx_data;
 end if;
 end if;
 end process;
@@ -161,6 +206,17 @@ begin
                 lcd_rs_flag <= '1';
                 lcd_write_en <= '1';
             end if;
+        end if;
+    end if;
+end process;
+
+-- UART Rx read pulse (triggered by read strobe on port 0x04)
+process(clk, rdstr, portid)
+begin
+    if clk'event and clk='1' then
+        uart_rx_read <= '0';
+        if rdstr='1' and portid=x"04" then
+            uart_rx_read <= '1';
         end if;
     end if;
 end process;
@@ -206,6 +262,30 @@ port map (
          lcd_rw => Rw,
          lcd_e => E,
          busy => lcd_busy
+);
+
+-- UART Baud Rate Generator Instantiation
+uart_baud_gen : UART_BaudRate_Gen
+port map (
+         clk => clk,
+         reset => reset,
+         en_16_x_baud => en_16_x_baud
+);
+
+-- UART Controller Instantiation
+uart_ctrl : UART_Controller
+port map (
+         clk => clk,
+         reset => reset,
+         en_16_x_baud => en_16_x_baud,
+         tx_data => uart_tx_data,
+         tx_write => uart_tx_write,
+         rx_data => uart_rx_data,
+         rx_read => uart_rx_read,
+         uart_tx => uart_tx,
+         uart_rx => uart_rx,
+         rx_data_present => uart_rx_data_present,
+         tx_full => uart_tx_full
 );
 
  mem: memoria
