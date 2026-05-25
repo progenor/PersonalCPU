@@ -1,9 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  \
-"../../../../Ps_2.srcs/sources_1/imports/Picoblaze_6/kcpsm6.vhd" \
-"../../../../Ps_2.srcs/sources_1/imports/Downloads/prog_memory.vhd" \
-"../../../../Ps_2.srcs/sources_1/imports/Downloads/ps2_lcd_toplevel.vhd" \
-"../../../../Ps_2.srcs/sim_1/imports/new/Ps2_Simulation.vhd" \
-
-# Do not sort compile order
-nosort

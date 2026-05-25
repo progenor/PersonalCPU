@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="Ivacson Attila" Host="DESKTOP-SGQVFU5" Pid="21744" HostCore="20" HostMemory="016777838592">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="Ivacson Attila" Host="DESKTOP-SGQVFU5" Pid="22100" HostCore="20" HostMemory="016777838592">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="Ivacson Attila" Host="DESKTOP-SGQVFU5" Pid="18716" HostCore="20" HostMemory="016777838592">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="Ivacson Attila" Host="DESKTOP-SGQVFU5" Pid="28192" HostCore="20" HostMemory="016777838592">
+    </Process>
+</ProcessHandle>
+<?xml version="1.0"?>
+<ProcessHandle Version="1" Minor="0">
+    <Process Command="vivado.bat" Owner="Ivacson Attila" Host="DESKTOP-SGQVFU5" Pid="28228" HostCore="20" HostMemory="016777838592">
+    </Process>
+</ProcessHandle>
