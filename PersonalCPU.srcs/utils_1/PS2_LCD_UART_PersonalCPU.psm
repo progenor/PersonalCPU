@@ -1,7 +1,5 @@
-; ============================================================================
 ; PS2 Keyboard + LCD Display + UART for PersonalCPU
 ; Adapted for PersonalCPU Port I/O Mapping
-; ============================================================================
 ; Port Mapping:
 ;   0x01: PS/2 data read (bit 0 = PS2 data)
 ;   0x02: LCD command write (Rs=0)
@@ -10,9 +8,7 @@
 ;   0x05: Button input
 ;   0x06: LED output
 ;   0x07: UART status (bit 0=rx_present, bit 1=tx_full)
-; ============================================================================
 
-; ===== REGISTER NAMES =====
 NAMEREG s0, bitcnt           ; PS/2 bit counter
 NAMEREG s1, datareg          ; PS/2 shift register low byte
 NAMEREG s2, datareg_h        ; PS/2 shift register high byte
@@ -27,7 +23,7 @@ NAMEREG sA, lcd_temp         ; LCD temp data
 NAMEREG sB, cursor_pos       ; LCD cursor position
 NAMEREG sC, uart_status      ; UART status
 
-; ===== INITIALIZATION =====
+; INIT
             LOAD bitcnt, 00
             LOAD datareg, 00
             LOAD datareg_h, 00
@@ -39,9 +35,9 @@ NAMEREG sC, uart_status      ; UART status
             ENABLE INTERRUPT         ; Enable PS/2 interrupt
 
 
-; ===== MAIN LOOP =====
+; MAIN LOOP
 main_loop:
-            ; --- Check for PS/2 character ready ---
+            ; Check for PS/2 character ready
             COMPARE char_ready, 01
             JUMP Z, check_uart
             
@@ -50,7 +46,7 @@ main_loop:
             JUMP process_char
 
 check_uart:
-            ; --- Check for UART Rx data ---
+            ; Check for UART Rx data
             INPUT uart_status, 07    ; Read UART status (Port 0x07)
             AND delay1, uart_status, 01   ; Check bit 0: rx_data_present
             JUMP Z, main_loop        ; No data, go back to start
@@ -59,26 +55,26 @@ check_uart:
             INPUT CharCode, 07       ; Read from Port 0x07 (Rx data when read)
             
 process_char:
-            ; --- Handle Escape (clear screen) ---
+            ; Handle Escape (clear screen)
             COMPARE CharCode, 1B
             JUMP Z, handle_esc
             
-            ; --- Handle Enter (newline) ---
+            ; Handle Enter (newline)
             COMPARE CharCode, 0D
             JUMP Z, handle_enter
             
-            ; --- Handle Backspace ---
+            ; Handle Backspace
             COMPARE CharCode, 08
             JUMP Z, handle_bs
             
-            ; --- Normal character write ---
+            ; Normal character write
             LOAD lcd_temp, CharCode
             CALL lcd_write_data
             
             ; Increment cursor position
             ADD cursor_pos, 01
             
-            ; --- Check line wrap (16 chars per line) ---
+            ; Check line wrap (16 chars per line)
             COMPARE cursor_pos, 10
             JUMP NZ, check_end_screen
             LOAD cursor_pos, 40      ; Move to row 2
@@ -95,11 +91,11 @@ check_end_screen:
             CALL lcd_write_cmd
 
 uart_echo:
-            ; --- Echo character to UART Tx ---
+            ; Echo character to UART Tx
             CALL uart_transmit
             JUMP main_loop
 
-; --- ESCAPE: Clear screen ---
+; ESCAPE: Clear screen
 handle_esc:
             LOAD lcd_temp, 01        ; Clear display command
             CALL lcd_write_cmd
@@ -107,7 +103,7 @@ handle_esc:
             LOAD cursor_pos, 00      ; Reset cursor
             JUMP uart_echo
 
-; --- ENTER: Move to next line ---
+; ENTER: Move to next line
 handle_enter:
             COMPARE cursor_pos, 40
             JUMP C, enter_to_line2   ; If < 0x40 (row 1), go to row 2
@@ -124,7 +120,7 @@ enter_to_line2:
             CALL lcd_write_cmd
             JUMP uart_echo
 
-; --- BACKSPACE: Delete character ---
+; BACKSPACE: Delete character
 handle_bs:
             COMPARE cursor_pos, 00
             JUMP Z, uart_echo        ; At line start, do nothing
@@ -155,7 +151,7 @@ apply_bs:
             JUMP uart_echo
 
 
-; ===== LCD SUBROUTINES =====
+; LCD SUBROUTINES
 lcd_init:
             CALL delay_20ms
             LOAD lcd_temp, 38       ; 8-bit, 2-line, 5x8 font
@@ -182,7 +178,7 @@ lcd_write_data:
             RETURN
 
 
-; ===== UART SUBROUTINE =====
+; UART SUBROUTINE
 uart_transmit:
             INPUT uart_status, 07   ; Read UART status
             AND delay1, uart_status, 02   ; Check bit 1: tx_full
@@ -192,7 +188,7 @@ uart_transmit:
             RETURN
 
 
-; ===== DELAY SUBROUTINES =====
+; DELAY SUBROUTINES
 delay_37us:
             LOAD delay1, 00
             LOAD delay2, 05
@@ -220,7 +216,7 @@ d20ms_loop: SUB delay1, 01
             RETURN
 
 
-; ===== PS/2 INTERRUPT HANDLER (ISR at 0x3FF) =====
+; PS/2 INTERRUPT HANDLER (ISR at 0x3FF)
 int_handler:
             INPUT s2, 01             ; Read PS/2 data bit from Port 0x01
             COMPARE bitcnt, 00
@@ -274,7 +270,7 @@ end_int:
             RETURNI ENABLE
 
 
-; ===== SCANCODE TO ASCII CONVERSION =====
+; SCANCODE TO ASCII CONVERSION
 sc_to_ascii:
             ; Numbers 0-9
             COMPARE scancode, 45
@@ -454,6 +450,6 @@ char_esc:
         LOAD CharCode, 1B
         RETURN
 
-; ===== INTERRUPT VECTOR =====
+; INTERRUPT VECTOR
             ADDRESS 3FF
             JUMP int_handler

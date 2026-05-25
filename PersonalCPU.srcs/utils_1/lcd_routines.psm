@@ -1,4 +1,4 @@
-;===============================================================================
+;
 ; LCD Routines for PersonalCPU
 ; Standard HD44780 16x2 LCD Interface
 ;
@@ -7,11 +7,11 @@
 ;   Port 0x03: LCD Data (Rs=1)
 ;
 ; All delays are software-based for 125 MHz system clock
-;===============================================================================
+;
 
-;===============================================================================
+;
 ; LCD_Init: Initialize LCD for 8-bit mode, 2 lines, 5x8 font
-;===============================================================================
+;
 lcd_init:
     ; Function Set: 0x38 = 8-bit, 2-line, 5x8 font
     load s0, 0x38
@@ -35,9 +35,9 @@ lcd_init:
     
     return
 
-;===============================================================================
+;
 ; LCD_Clear: Clear display and return cursor to home
-;===============================================================================
+;
 lcd_clear:
     load s0, 0x01           ; Clear display command
     output s0, 0x02

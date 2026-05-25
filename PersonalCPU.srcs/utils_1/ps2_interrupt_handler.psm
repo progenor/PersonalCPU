@@ -1,6 +1,6 @@
-;===============================================================================
+;
 ; PS/2 Keyboard Interrupt Handler and Scancode Capture Routine
-; 
+;
 ; PersonalCPU PS/2 Integration with LCD Display
 ; Assembly code for capturing raw PS/2 keyboard scancodes via interrupt
 ; and displaying them on LCD
@@ -22,7 +22,7 @@
 ;   0x05: Scancode buffer read pointer
 ;   0x20-0x3F: Circular scancode buffer (32 bytes)
 ;
-;===============================================================================
+;
 
 ; Include LCD routines
 #include "lcd_routines.psm"
@@ -34,9 +34,9 @@
 #define PS2_BUFFER_SIZE     0x20
 #define PS2_BUFFER_START    0x20
 
-;===============================================================================
+;
 ; Main Program - Initialization and Test Loop
-;===============================================================================
+;
 main_program:
     ; Initialize scratch pad memory
     load s0, 00              ; Clear bit counter
@@ -136,7 +136,7 @@ skip_lcd_write:
 skip_read:
     jump main_loop
 
-;===============================================================================
+;
 ; INTERRUPT SERVICE ROUTINE (ISR)
 ; Entry point: Address 0x7FF (last address for 2K ROM in KCPSM6)
 ; Triggered by falling edge of PS/2 clock from PS2_Controller
@@ -264,6 +264,6 @@ no_bit:
     
     returni                  ; Return from interrupt
 
-;===============================================================================
+;
 ; End of PS/2 ISR
-;===============================================================================
+;

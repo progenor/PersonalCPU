@@ -1,4 +1,4 @@
-; ===== REGISZTEREK =====
+; REGISZTEREK
 NAMEREG s0, bitcnt
 NAMEREG s1, datareg
 NAMEREG s2, temp
@@ -9,105 +9,105 @@ NAMEREG s6, char_ready
 NAMEREG s7, delay1      
 NAMEREG s8, delay2
 NAMEREG s9, delay3
-NAMEREG sA, lcd_temp    
+; REGISTERS
 NAMEREG sB, cursor_pos  
-NAMEREG sC, int_temp    ; ÚJ: Külön temp regiszter a megszakításnak!
+; INITIALIZATION
 
-; ===== INDÍTÁS / INICIALIZÁLÁS =====
+; MAIN PROGRAM (MAIN LOOP)
             LOAD bitcnt, 00
-            LOAD datareg, 00
+            ; 1. Check PS/2 keyboard
             LOAD breakflag, 00
-            LOAD char_ready, 00
-            LOAD cursor_pos, 00     ; Kurzor a 00 címen (1. sor eleje) indul
+            ; 2. Check UART RX data (from PC)
+            ; Port 03 mapping: bit 0 = rx_data_present, bit 1 = tx_full
 
-            CALL lcd_init      
+            ; At PS/2 character, clear the ready flag
             ENABLE INTERRUPT         
-
-; ===== FŐPROGRAM (MAIN LOOP) =====
-main_loop:
-            ; --- 1. PS/2 BILLENTYŰZET VIZSGÁLATA ---
-            COMPARE char_ready, 01
+            ; ESCAPE CHECK (Clear screen)
+; FŐPROGRAM (MAIN LOOP)
+            ; ENTER CHECK (Newline)
+            ; 1. PS/2 BILLENTYŰZET VIZSGÁLATA
+            ; BACKSPACE CHECK
             JUMP Z, process_ps2
-
-            ; --- 2. UART RX (PC-ről érkező) ADAT VIZSGÁLATA ---
-            ; Port 03 kiosztása: bit 0 = rx_data_present, bit 1 = tx_full
+            ; NORMAL CHARACTER WRITE
+            ; 2. UART RX (PC-ről érkező) ADAT VIZSGÁLATA
+            ; Increment cursor position
             INPUT temp, 03            ; UART állapot lekérdezése
-            TEST temp, 01             ; 0. bit ellenőrzése (van adat?)
-            JUMP Z, main_loop         ; Ha nincs semmi, kezdje elölről a ciklust
+            ; LINE WRAP (16 chars per line) check
+            ; If we've reached the end of line 1 (16 chars, addr 0x10)
 
-            ; Ha jött adat UART-on, beolvassuk
+            ; If we've reached the end of line 2 (16 chars, addr 0x50)
             INPUT CharCode, 02        ; UART Rx adat beolvasása a 02-es portról
-            JUMP process_char         ; Egyből ugrás a feldolgozáshoz
+; ESCAPE HANDLER
 
-process_ps2:
+; ENTER HANDLER
             ; PS/2 Karakternél vagyunk, azonnal töröljük a flaget
-            LOAD char_ready, 00
+            ; Use C flag (Carry) to determine the line
 
-process_char:
-            ; --- ESCAPE VIZSGÁLATA (Képernyő törlés) ---
-            COMPARE CharCode, 1B        ; ASCII 1B az Escape
+            JUMP C, enter_to_line2      ; If cursor_pos < 0x40 (line 1), go to line 2
+            ; ESCAPE VIZSGÁLATA (Képernyő törlés)
+            ; If already on line 2 (or beyond), wrap to start of line 1
             JUMP Z, handle_esc
-
-            ; --- ENTER VIZSGÁLATA (Sortörés) ---
-            COMPARE CharCode, 0D        ; ASCII 0D (Carriage Return) az Enter
+; BACKSPACE HANDLER
+            ; ENTER VIZSGÁLATA (Sortörés)
+            ; Simple decrement of cursor position
             JUMP Z, handle_enter
-
-            ; --- BACKSPACE VIZSGÁLATA ---
-            COMPARE CharCode, 08        ; ASCII 08 a Backspace
+            ; 1. Set cursor to previous position
+            ; BACKSPACE VIZSGÁLATA
+            LOAD lcd_temp, 80           ; 0x80 = Set DDRAM Address command base
             JUMP Z, handle_bs
-
-            ; --- NORMÁL KARAKTER KIÍRÁSA ---
-            LOAD lcd_temp, CharCode
+            ADD lcd_temp, cursor_pos    ; + current cursor position
+            ; NORMÁL KARAKTER KIÍRÁSA
+            ; 2. Overwrite with a space to erase character
             CALL lcd_write_data
-            
+            LOAD lcd_temp, 20           ; ASCII space (0x20)
             ; Kurzor pozíció növelése
-            ADD cursor_pos, 01
+            ; 3. Restore cursor to erased position so new char is typed there
             
-            ; --- AUTOMATIKUS SORTÖRÉS (LINE WRAP) VIZSGÁLATA ---
+finish_char:
             ; Ha elértük az 1. sor végét (16. karakter, címe: 10h)
-            COMPARE cursor_pos, 10
+            ; Send character to PC (UART TX)
             JUMP NZ, check_end_of_screen
             LOAD cursor_pos, 40         ; Ugrás a 2. sor elejére (címe: 40h)
             LOAD lcd_temp, C0           ; Parancs: DDRAM cím beállítása 40h-ra (80h + 40h = C0h)
-            CALL lcd_write_cmd
+; UART SUBROUTINE
             JUMP finish_char
-
+; LCD SUBROUTINES
 check_end_of_screen:
-            ; Ha elértük a 2. sor végét (16. karakter, címe: 50h)
+; DELAY ROUTINES
             COMPARE cursor_pos, 50
-            JUMP NZ, finish_char
+; INTERRUPT ROUTINE
             LOAD cursor_pos, 00         ; Vissza a képernyő elejére (címe: 00h)
             LOAD lcd_temp, 80           ; Parancs: DDRAM cím beállítása 00h-ra (80h + 00h = 80h)
-            CALL lcd_write_cmd
+            INPUT int_temp, 00       ; NOTE: using int_temp instead of temp for ISR
             JUMP finish_char
 
-; --- ESCAPE KEZELÉSE ---
+; ESCAPE KEZELÉSE
 handle_esc:
             LOAD lcd_temp, 01           ; Képernyő törlése (Clear Display parancs)
-            CALL lcd_write_cmd
+            COMPARE int_temp, 80     ; NOTE: use int_temp for ISR input
             CALL delay_2ms              ; Ennek a parancsnak több idő kell
             LOAD cursor_pos, 00         ; Kurzor pozíció nullázása
             JUMP finish_char
-
-; --- ENTER KEZELÉSE ---
+            LOAD CharCode, 00        ; NOTE: clear to avoid printing leftover character
+; ENTER KEZELÉSE
 handle_enter:
-            ; C flag (Carry) használata a sor meghatározására
+            COMPARE CharCode, 00     ; NOTE: if no mapping (e.g., Shift), skip
             COMPARE cursor_pos, 40      
             JUMP C, enter_to_line2      ; Ha cursor_pos < 40h (1. sor), ugorjon a 2. sorra
-
+; SCAN CODE -> ASCII CONVERSION
             ; Ha a 2. sorban (vagy annál tovább) voltunk, visszaugrik az 1. sor elejére
-            LOAD cursor_pos, 00
+        ; Add Backspace, Enter, Esc
             LOAD lcd_temp, 80           ; 80h + 00h
-            CALL lcd_write_cmd
+; CHARACTER DEFINITIONS
             JUMP finish_char
-
+; Special keys (BS, Enter, Esc)
 enter_to_line2:
-            LOAD cursor_pos, 40
+; INTERRUPT VECTOR
             LOAD lcd_temp, C0           ; 80h + 40h
             CALL lcd_write_cmd
             JUMP finish_char
 
-; --- BACKSPACE KEZELÉSE ---
+; BACKSPACE KEZELÉSE
 handle_bs:
             COMPARE cursor_pos, 00
             JUMP Z, finish_char         ; Ha az 1. sor legelső karakterén vagyunk, ne csináljon semmit
@@ -138,12 +138,12 @@ apply_bs:
             CALL lcd_write_cmd
 
 finish_char:
-            ; --- Karakter küldése PC-nek (UART TX) ---
+            ; Karakter küldése PC-nek (UART TX)
             CALL uart_transmit
             JUMP main_loop
 
 
-; ===== UART SZUBRUTIN =====
+; UART SZUBRUTIN
 uart_transmit:
             INPUT temp, 03            ; UART állapot beolvasása (03-as port)
             TEST temp, 02             ; 1. bit ellenőrzése (tx_full - tele van az adó buffer?)
@@ -153,7 +153,7 @@ uart_transmit:
             RETURN
 
 
-; ===== LCD SZUBRUTINOK =====
+; LCD SZUBRUTINOK
 lcd_init:
             CALL delay_20ms
             LOAD lcd_temp, 38       ; Set Function
@@ -188,7 +188,7 @@ lcd_write_data:
             RETURN
 
 
-; ===== KÉSLELTETŐ (DELAY) RUTINOK ===== 
+; KÉSLELTETŐ (DELAY) RUTINOK
 delay_37us:
             LOAD delay1, 00
             LOAD delay2, 05
@@ -216,7 +216,7 @@ d20ms_loop: SUB delay1, 01
             RETURN
 
 
-;=== MEGSZAKÍTÁS (INTERRUPT) RUTIN =====
+; MEGSZAKÍTÁS (INTERRUPT) RUTIN
 int_rut:
             INPUT int_temp, 00       ; ÚJ: int_temp használata temp helyett!     
             COMPARE bitcnt, 00
@@ -267,7 +267,7 @@ end_int:
             RETURNI ENABLE
 
 
-; ===== SCAN CODE -> ASCII KONVERZIÓ =====
+; SCAN CODE -> ASCII KONVERZIÓ
 sc_to_ascii:
     COMPARE scancode, 45
     JUMP Z, char_0
@@ -344,7 +344,7 @@ sc_to_ascii:
     COMPARE scancode, 29
     JUMP Z, char_space
     
-    ; --- Backspace, Enter, Esc hozzáadása ---
+        ; Backspace, Enter, Esc hozzáadása
     COMPARE scancode, 66
     JUMP Z, char_bs
     COMPARE scancode, 5A
@@ -353,7 +353,7 @@ sc_to_ascii:
     JUMP Z, char_esc
     RETURN
 
-; ===== KARAKTER DEFINÍCIÓK =====
+; KARAKTER DEFINÍCIÓK
 char_0: LOAD CharCode, 30
         RETURN
 char_1: LOAD CharCode, 31
@@ -430,7 +430,7 @@ char_space:
         LOAD CharCode, 20
         RETURN
 
-; --- Különleges gombok (BS, Enter, Esc) ---
+; Különleges gombok (BS, Enter, Esc)
 char_bs:
         LOAD CharCode, 08
         RETURN
@@ -441,6 +441,6 @@ char_esc:
         LOAD CharCode, 1B
         RETURN
 
-; ===== INTERRUPT VEKTOR =====
+; INTERRUPT VEKTOR
             ADDRESS 3FF
             JUMP int_rut
